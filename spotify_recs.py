@@ -29,11 +29,14 @@ dataframe_name['external_urls'] = urls
 fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
 dataframe_name['followers'] = fol
 actual_data_frame = dataframe_name[['name', 'external_urls', 'popularity',
-    'followers']].sort_values('followers', ascending=False)
+                                    'followers']].sort_values(
+                                        'followers', ascending=False
+                                    )
 
 engine = db.create_engine('sqlite:///actual_data_frame.db')
-actual_data_frame.to_sql('table_name', con=engine, if_exists='replace',
-    index=False)
+actual_data_frame.to_sql(
+    'table_name', con=engine, if_exists='replace', index=False
+)
 with engine.connect() as connection:
     connect = connection.execute(db.text("SELECT * FROM table_name;"))
     query_result = connect.fetchall()
