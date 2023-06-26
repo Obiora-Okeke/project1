@@ -22,6 +22,13 @@ artist_id = input('Enter artist id: ')
 r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
                  headers=headers)
 data = r.json()
+while 'error' in data.keys():
+    print('Error. Input working ID')
+    artist_id = input('Enter artist id: ')
+    r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
+                        headers=headers
+                    )
+    data = r.json()
 
 dataframe_name = pd.DataFrame.from_dict(data['artists'])
 urls = dataframe_name['external_urls'].map(lambda x: x.get('spotify', 'N/A'))
