@@ -18,9 +18,9 @@ access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 
 BASE_URL = 'https://api.spotify.com/v1/'
-artist_id = "0eDvMgVFoNV3TpwtrVCoTj" # input('Enter artist id: ')
+artist_id = input('Enter artist id: ')
 r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
- headers=headers)
+    headers=headers)
 data = r.json()
 
 dataframe_name = pd.DataFrame.from_dict(data['artists'])
@@ -28,11 +28,11 @@ urls = dataframe_name['external_urls'].map(lambda x: x.get('spotify', 'N/A'))
 dataframe_name['external_urls'] = urls
 fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
 dataframe_name['followers'] = fol
-actual_data_frame = dataframe_name[['name', 'external_urls','popularity',
+actual_data_frame = dataframe_name[['name', 'external_urls', 'popularity', 
     'followers']].sort_values('followers', ascending=False)
 
 engine = db.create_engine('sqlite:///actual_data_frame.db')
-actual_data_frame.to_sql('table_name', con=engine, if_exists='replace',
+actual_data_frame.to_sql('table_name', con=engine, if_exists='replace', 
     index=False)
 with engine.connect() as connection:
     connect = connection.execute(db.text("SELECT * FROM table_name;"))
