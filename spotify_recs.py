@@ -3,6 +3,7 @@ import pandas as pd
 import sqlalchemy as db
 import pprint
 
+
 def api_call():
     pd.set_option('max_colwidth', None)
     client_id = "ce303767105943e9b563c582c546bcdf"
@@ -23,6 +24,7 @@ def api_call():
                     headers=headers)
     return r.json()
 
+
 def error_check(li):
     check = 'artists' in li.keys()
     if check:
@@ -30,6 +32,7 @@ def error_check(li):
     else:
         print('Error. Input working ID')
         return True
+
 
 def json_to_dataframe(data):
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
@@ -40,13 +43,14 @@ def json_to_dataframe(data):
     dataframe_name['followers'] = fol
     return dataframe_name[['name', 'external_urls', 'popularity',
                                         'followers']].sort_values(
-                                            'followers', ascending=False
-                                        )
+                                        'followers', ascending=False)
+
 
 def dataframe_to_database(frame):
     frame.to_sql(
         'table_name', con=engine, if_exists='replace', index=False
     )
+
 
 dat = api_call()
 error_present = error_check(dat)
