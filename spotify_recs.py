@@ -10,6 +10,7 @@ def api_call():
                     headers=headers)
     return r.json()
 
+
 def error_check(li):
     check = 'artists' in li.keys()
     if check:
@@ -27,14 +28,15 @@ def json_to_dataframe(data):
     fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
     dataframe_name['followers'] = fol
     return dataframe_name[['name', 'external_urls', 'popularity',
-                                        'followers']].sort_values(
-                                            'followers', ascending=False)
+                           'followers']].sort_values('followers',
+                                                     ascending=False)
 
 
 def dataframe_to_database(frame):
     frame.to_sql(
         'table_name', con=engine, if_exists='replace', index=False
     )
+
 
 pd.set_option('max_colwidth', None)
 client_id = "ce303767105943e9b563c582c546bcdf"
