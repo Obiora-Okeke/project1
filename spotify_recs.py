@@ -3,12 +3,13 @@ import pandas as pd
 import sqlalchemy as db
 import pprint
 
+
 def get_artist_id(artist_name):
     search_response = requests.get(BASE_URL + 'search',
-                                  headers=headers,
-                                  params={'q': artist_name,
-                                          'type': 'artist',
-                                          'limit': 1})
+                                   headers=headers,
+                                   params={'q': artist_name,
+                                           'type': 'artist',
+                                           'limit': 1})
     if search_response.status_code == 200:
         artists = search_response.json()['artists']['items']
         if artists:
