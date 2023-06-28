@@ -16,6 +16,8 @@ def get_artist_id(artist_name):
             return artists[0]['id']
         else:
             print(f"No artist found with the name: {artist_name}")
+            new_name = input("Please input an Artist name: ")
+            return get_artist_id(new_name)
     else:
         print("Error occurred while searching for the artist.")
     return None
@@ -29,22 +31,15 @@ def api_call():
     return r.json()
 
 
-def error_check(li):
-    check = 'artists' in li.keys()
-    if check:
-        return False
-    else:
-        print('Error. Input working ID')
-        return True
-
-
 def json_to_dataframe(data):
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
-    urls = dataframe_name['external_urls'].map(lambda x: x.get('spotify',
-                                                               'N/A'))
-    dataframe_name['external_urls'] = urls
-    fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
-    dataframe_name['followers'] = fol
+    if 'external_urls' in dataframe_name:
+        urls = dataframe_name['external_urls'].map(lambda x: x.get('spotify',
+                                                                   'N/A'))
+        dataframe_name['external_urls'] = urls
+    if 'followers' in dataframe_name:
+        fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
+        dataframe_name['followers'] = fol
     return dataframe_name[['name', 'external_urls', 'popularity',
                            'followers']].sort_values('followers',
                                                      ascending=False)
@@ -70,13 +65,6 @@ access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
 dat = api_call()
-error_present = error_check(dat)
-while error_present:
-    artist_id = input('Enter artist id: ')
-    r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
-                     headers=headers)
-    dat = r.json()
-    error_present = error_check(dat)
 adf = json_to_dataframe(dat)
 engine = db.create_engine('sqlite:///actual_data_frame.db')
 dataframe_to_database(adf)
