@@ -23,7 +23,7 @@ def error_check(li):
 def json_to_dataframe(data):
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
     urls = dataframe_name['external_urls'].map(lambda x: x.get('spotify',
-            'N/A'))
+                                                               'N/A'))
     dataframe_name['external_urls'] = urls
     fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
     dataframe_name['followers'] = fol
