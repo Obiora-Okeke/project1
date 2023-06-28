@@ -7,7 +7,7 @@ import pprint
 def api_call():
     artist_id = input('Enter artist id: ')
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
-                    headers=headers)
+                     headers=headers)
     return r.json()
 
 
