@@ -3,9 +3,26 @@ import pandas as pd
 import sqlalchemy as db
 import pprint
 
+def get_artist_id(artist_name):
+    search_response = requests.get(BASE_URL + 'search',
+                                  headers=headers,
+                                  params={'q': artist_name,
+                                          'type': 'artist',
+                                          'limit': 1})
+    if search_response.status_code == 200:
+        artists = search_response.json()['artists']['items']
+        if artists:
+            return artists[0]['id']
+        else:
+            print(f"No artist found with the name: {artist_name}")
+    else:
+        print("Error occurred while searching for the artist.")
+    return None
+
 
 def api_call():
-    artist_id = input('Enter artist id: ')
+    artist_name = input('Enter artist name: ')
+    artist_id = get_artist_id(artist_name)
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
                      headers=headers)
     return r.json()
