@@ -1,13 +1,13 @@
-### Spotify Artist Recommender
+# Spotify Artist Recommender
 This program allows you to input an artist's Spotify ID and retrieves a list of 10 related artists along with their Spotify URLs, popularity ratings, and number of followers.
 
-# packages
+### packages
 - requests
 - pandas
 - sqlalchemy
 - pprint
 
-# Usage
+### Usage
 1. Obtain Spotify API credentials:
 	- Go to the Spotify Developer Dashboard at https://developer.spotify.com/ and create a new application
 	- Copy the 'Client ID' and 'Client Secret' values
