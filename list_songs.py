@@ -2,9 +2,6 @@ import requests
 import pandas as pd
 import sqlalchemy as db
 import pprint
-import webbrowser
-import base64
-from urllib.parse import urlencode
 from tabulate import tabulate
 
 
