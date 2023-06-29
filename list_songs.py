@@ -41,7 +41,7 @@ def top_songs_call(art_name):
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/top-tracks',
                      headers=headers, params={'market': country_code})
     data = r.json()
-    top_songs = data['tracks'][:5]  # Limit to top 5 songs
+    top_songs = data['tracks'][:3]  # Limit to top 3 songs
     result = []
     for song in top_songs:
         artist_name = song['artists'][0]['name']
