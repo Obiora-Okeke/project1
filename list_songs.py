@@ -104,13 +104,6 @@ for ar in rel_artitst:
     songs = pd.concat([songs, ar_songs_df])
 engine = db.create_engine('sqlite:///actual_data_frame.db')
 dataframe_to_database(songs)
-'''
-pd.set_option("display.max_rows", 100)
-pd.set_option('display.max_columns', None)
-pd.set_option("display.expand_frame_repr", True)
-#pd.set_option('display.width', 15)
-pd.set_option("display.max_colwidth", 53)
-''' 
 with engine.connect() as connection:
     connect = connection.execute(db.text("SELECT * FROM table_name;"))
     query_result = connect.fetchall()
@@ -119,6 +112,3 @@ with engine.connect() as connection:
                    ['artist', 'song', 'external_url'],
                    tablefmt="grid",
                    maxcolwidths=[None, 15, 53]))
-
-    #df = pd.DataFrame(query_result)
-    #df.to_csv("output.csv", index=False)
