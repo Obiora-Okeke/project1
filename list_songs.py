@@ -41,9 +41,7 @@ def top_songs_call(art_name):
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/top-tracks',
                      headers=headers, params={'market': country_code})
     data = r.json()
-    #pprint.pprint(data)
     top_songs = data['tracks'][:5]  # Limit to top 5 songs
-    
     result = []
     for song in top_songs:
         artist_name = song['artists'][0]['name']
@@ -58,7 +56,6 @@ def top_songs_call(art_name):
     return result
 
 
-
 def json_to_dataframe(data):
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
     if 'external_urls' in dataframe_name:
@@ -71,6 +68,7 @@ def json_to_dataframe(data):
     return dataframe_name[['name', 'external_urls', 'popularity',
                            'followers']].sort_values('followers',
                                                      ascending=False)
+
 
 def songs_dataframe(s):
     sdf = pd.DataFrame(s)
@@ -97,7 +95,6 @@ auth_response_data = auth_response.json()
 access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
-
 dat = api_call()
 adf = json_to_dataframe(dat)
 rel_artitst = adf['name'].tolist()
@@ -106,9 +103,6 @@ for ar in rel_artitst:
     ar_songs = top_songs_call(ar)
     ar_songs_df = pd.DataFrame(ar_songs) 
     songs = pd.concat([songs, ar_songs_df])
-
-#print(songs)
-
 engine = db.create_engine('sqlite:///actual_data_frame.db')
 #dataframe_to_database(adf)
 dataframe_to_database(songs)
@@ -119,12 +113,13 @@ pd.set_option("display.expand_frame_repr", True)
 #pd.set_option('display.width', 15)
 pd.set_option("display.max_colwidth", 53)
 ''' 
-
 with engine.connect() as connection:
     connect = connection.execute(db.text("SELECT * FROM table_name;"))
     query_result = connect.fetchall()
 
-    print(tabulate(pd.DataFrame(query_result), ['artist', 'song', 'external_url'], tablefmt="grid", maxcolwidths = [None, 15, 53]))
+    print(tabulate(pd.DataFrame(query_result), ['artist', 'song', 'external_url'],
+                                                tablefmt="grid",
+                                                maxcolwidths = [None, 15, 53]))
 
     #df = pd.DataFrame(query_result)
     #df.to_csv("output.csv", index=False)
