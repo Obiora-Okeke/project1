@@ -52,7 +52,6 @@ def top_songs_call(art_name):
             'song': song_name,
             'external_url': external_url
         })
-    
     return result
 
 
@@ -101,10 +100,9 @@ rel_artitst = adf['name'].tolist()
 songs = pd.DataFrame()
 for ar in rel_artitst:
     ar_songs = top_songs_call(ar)
-    ar_songs_df = pd.DataFrame(ar_songs) 
+    ar_songs_df = pd.DataFrame(ar_songs)
     songs = pd.concat([songs, ar_songs_df])
 engine = db.create_engine('sqlite:///actual_data_frame.db')
-#dataframe_to_database(adf)
 dataframe_to_database(songs)
 '''
 pd.set_option("display.max_rows", 100)
@@ -117,9 +115,10 @@ with engine.connect() as connection:
     connect = connection.execute(db.text("SELECT * FROM table_name;"))
     query_result = connect.fetchall()
 
-    print(tabulate(pd.DataFrame(query_result), ['artist', 'song', 'external_url'],
-                                                tablefmt="grid",
-                                                maxcolwidths = [None, 15, 53]))
+    print(tabulate(pd.DataFrame(query_result),
+                   ['artist', 'song', 'external_url'],
+                   tablefmt="grid",
+                   maxcolwidths=[None, 15, 53]))
 
     #df = pd.DataFrame(query_result)
     #df.to_csv("output.csv", index=False)
