@@ -43,25 +43,25 @@ def top_songs_call(art_name):
     for song in top_songs:
         artist_name = song['artists'][0]['name']
         song_name = song['name']
-        external_url = song['external_urls']['spotify']
+        uri = song['uri']
         result.append({
             'artist': artist_name,
             'song': song_name,
-            'external_url': external_url
+            'uri': uri
         })
     return result
 
 
 def json_to_dataframe(data):
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
-    if 'external_urls' in dataframe_name:
-        urls = dataframe_name['external_urls'].map(lambda x: x.get('spotify',
-                                                                   'N/A'))
-        dataframe_name['external_urls'] = urls
+    # if 'uri' in dataframe_name:
+    #     uris = dataframe_name['uri'].map(lambda x: x.get('spotify',
+    #                                                                'N/A'))
+    #     dataframe_name['uris'] = uris
     if 'followers' in dataframe_name:
         fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
         dataframe_name['followers'] = fol
-    return dataframe_name[['name', 'external_urls', 'popularity',
+    return dataframe_name[['name', 'uri', 'popularity',
                            'followers']].sort_values('followers',
                                                      ascending=False)
 
@@ -106,6 +106,6 @@ with engine.connect() as connection:
     query_result = connect.fetchall()
 
     print(tabulate(pd.DataFrame(query_result),
-                   ['artist', 'song', 'external_url'],
+                   ['artist', 'song', 'uri'],
                    tablefmt="grid",
                    maxcolwidths=[None, 15, 53]))
