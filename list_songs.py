@@ -3,6 +3,8 @@ import pandas as pd
 import sqlalchemy as db
 import pprint
 from tabulate import tabulate
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
 
 
 def get_artist_id(artist_name):
@@ -43,11 +45,11 @@ def top_songs_call(art_name):
     for song in top_songs:
         artist_name = song['artists'][0]['name']
         song_name = song['name']
-        external_url = song['external_urls']['spotify']
+        track_uri = song['uri']
         result.append({
             'artist': artist_name,
             'song': song_name,
-            'external_url': external_url
+            'track_uri': track_uri
         })
     return result
 
@@ -78,9 +80,11 @@ def dataframe_to_database(frame):
 
 
 pd.set_option('max_colwidth', None)
-client_id = "6b042ed0912244478c4a5e918259f88e"
-client_secret = "f853c53fcfb94d66ab38091b16356421"
+client_id = "ce303767105943e9b563c582c546bcdf"
+client_secret = "4f77f234a135413787ba25237ed8e819"
 AUTH_URL = 'https://accounts.spotify.com/api/token'
+redirect_uri = 'http://example.com'
+scope = "playlist-modify-public"
 auth_response = requests.post(AUTH_URL, {
     'grant_type': 'client_credentials',
     'client_id': client_id,
@@ -109,3 +113,23 @@ with engine.connect() as connection:
                    ['artist', 'song', 'external_url'],
                    tablefmt="grid",
                    maxcolwidths=[None, 15, 53]))
+
+sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
+                                               client_secret=client_secret,
+                                               redirect_uri=redirect_uri,
+                                               scope=scope))
+
+def create_playlist(username, playlist_name, songs):
+    user = sp.current_user()
+    user_id = user['id']
+    playlist = sp.user_playlist_create(user_id, playlist_name, public=True)
+    playlist_id = playlist['id']
+
+
+
+    print(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.")
+
+username = input("Enter your Spotify username: ")
+playlist_name = input("Enter the playlist name: ")
+
+create_playlist(username, playlist_name, songs)
