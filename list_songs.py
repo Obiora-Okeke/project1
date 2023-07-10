@@ -125,7 +125,8 @@ def create_playlist(username, playlist_name, songs):
     playlist = sp.user_playlist_create(user_id, playlist_name, public=True)
     playlist_id = playlist['id']
 
-
+    track_uris = songs['track_uri'].tolist()
+    sp.playlist_add_items(playlist_id, track_uris)
 
     print(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.")
 
