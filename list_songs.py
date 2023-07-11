@@ -4,6 +4,11 @@ import sqlalchemy as db
 import pprint
 from tabulate import tabulate
 import os
+import spotipy
+# from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy
+import spotipy.util as util
 
 def get_artist_id(artist_name):
     search_response = requests.get(BASE_URL + 'search',
@@ -76,16 +81,14 @@ def dataframe_to_database(frame):
         'table_name', con=engine, if_exists='replace', index=False
     )
 
-
-CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
-
-print(CLIENT_ID)
-
 pd.set_option('max_colwidth', None)
 # client_id = "6b042ed0912244478c4a5e918259f88e"
 # client_secret = "f853c53fcfb94d66ab38091b16356421"
-AUTH_URL = 'https://accounts.spotify.com/api/token'
+CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
+CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
+redirect_uri = "https://localhost:8888/callback"
+scope = "playlist-modify-public playlist-modify-private"
+AUTH_URL = "https://accounts.spotify.com/api/token"
 auth_response = requests.post(AUTH_URL, {
     'grant_type': 'client_credentials',
     'client_id': CLIENT_ID,
@@ -100,10 +103,11 @@ dat = api_call()
 adf = json_to_dataframe(dat)
 rel_artitst = adf['name'].tolist()
 songs = pd.DataFrame()
-for ar in rel_artitst:
+for ar in rel_artitst[:2]:
     ar_songs = top_songs_call(ar)
     ar_songs_df = pd.DataFrame(ar_songs)
     songs = pd.concat([songs, ar_songs_df])
+print(songs)
 engine = db.create_engine('sqlite:///actual_data_frame.db')
 dataframe_to_database(songs)
 with engine.connect() as connection:
@@ -114,3 +118,50 @@ with engine.connect() as connection:
                    ['artist', 'song', 'uri'],
                    tablefmt="grid",
                    maxcolwidths=[None, 15, 53]))
+    
+
+# util.prompt_for_user_token(username = username,
+#                            scope = scope,
+#                            client_id=CLIENT_ID,
+#                            client_secret=CLIENT_SECRET,
+#                            redirect_uri=redirect_uri)    
+
+username = input("Enter your Spotify username: ")
+
+token = util.prompt_for_user_token(username=username, 
+                                    scope=scope, 
+                                    client_id=CLIENT_ID,
+                                    client_secret=CLIENT_SECRET, 
+                                    redirect_uri='http://example.com/')
+if token:
+    sp = spotipy.Spotify(auth=token)
+else:
+    print('cannot get token')
+# client_credentials_manager = SpotifyClientCredentials(client_id=CLIENT_ID, client_secret=CLIENT_SECRET) 
+# sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+# sp = spotipy.Spotify(auth = access_token)
+
+
+def create_playlist(username, playlist_name, songs):
+    # print(dir(sp))
+    # user = sp.current_user
+    # print(dir(user))
+    # user_id = user['id']
+    user = sp.user(username)
+    # util.prompt_for_user_token(username=username,
+    #                        scope=scope,
+    #                        client_id=CLIENT_ID,
+    #                        client_secret=CLIENT_SECRET,
+    #                        redirect_uri=user['uri'])    
+    print(user)
+    playlist = sp.user_playlist_create(username, playlist_name, public=True, collaborative=False, description = 'recs')
+    playlist_id = playlist['id']
+    track_uris = songs['uri'].tolist()
+    sp.playlist_add_items(playlist_id, track_uris)
+
+    print(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.")
+
+# username = input("Enter your Spotify username: ")
+playlist_name = input("Enter the playlist name: ")
+
+create_playlist(username, playlist_name, songs)
