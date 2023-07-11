@@ -40,7 +40,7 @@ def json_to_dataframe(data):
     if 'followers' in dataframe_name:
         fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
         dataframe_name['followers'] = fol
-    return dataframe_name[['name', 'external_urls', 'popularity',
+    return dataframe_name[['name', 'uri', 'popularity',
                            'followers']].sort_values('followers',
                                                      ascending=False)
 
@@ -73,3 +73,6 @@ with engine.connect() as connection:
     connect = connection.execute(db.text("SELECT * FROM table_name;"))
     query_result = connect.fetchall()
     print(pd.DataFrame(query_result))
+
+
+
