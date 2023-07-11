@@ -3,7 +3,7 @@ import pandas as pd
 import sqlalchemy as db
 import pprint
 from tabulate import tabulate
-
+import os
 
 def get_artist_id(artist_name):
     search_response = requests.get(BASE_URL + 'search',
@@ -77,14 +77,19 @@ def dataframe_to_database(frame):
     )
 
 
+CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
+CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
+
+print(CLIENT_ID)
+
 pd.set_option('max_colwidth', None)
-client_id = "6b042ed0912244478c4a5e918259f88e"
-client_secret = "f853c53fcfb94d66ab38091b16356421"
+# client_id = "6b042ed0912244478c4a5e918259f88e"
+# client_secret = "f853c53fcfb94d66ab38091b16356421"
 AUTH_URL = 'https://accounts.spotify.com/api/token'
 auth_response = requests.post(AUTH_URL, {
     'grant_type': 'client_credentials',
-    'client_id': client_id,
-    'client_secret': client_secret,
+    'client_id': CLIENT_ID,
+    'client_secret': CLIENT_SECRET,
 })
 
 auth_response_data = auth_response.json()
