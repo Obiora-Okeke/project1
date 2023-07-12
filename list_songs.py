@@ -9,6 +9,7 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 import spotipy.util as util
+import threading 
 
 def get_artist_id(artist_name):
     search_response = requests.get(BASE_URL + 'search',
@@ -80,13 +81,19 @@ def dataframe_to_database(frame):
     frame.to_sql(
         'table_name', con=engine, if_exists='replace', index=False
     )
+def top_songs_to_songs(ar):
+    global songs
+    ar_songs = top_songs_call(ar)
+    ar_songs_df = pd.DataFrame(ar_songs)
+    songs = pd.concat([songs, ar_songs_df])
+
 
 pd.set_option('max_colwidth', None)
 # client_id = "6b042ed0912244478c4a5e918259f88e"
 # client_secret = "f853c53fcfb94d66ab38091b16356421"
 CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
-redirect_uri = "https://localhost:8888/callback"
+redirect_uri = "http://example.com/"
 scope = "playlist-modify-public playlist-modify-private"
 AUTH_URL = "https://accounts.spotify.com/api/token"
 auth_response = requests.post(AUTH_URL, {
@@ -103,18 +110,33 @@ dat = api_call()
 adf = json_to_dataframe(dat)
 rel_artitst = adf['name'].tolist()
 songs = pd.DataFrame()
-for ar in rel_artitst[:2]:
+
+threads = []
+for ar in rel_artitst:
+    thread = threading.Thread(target=top_songs_to_songs, args=(ar,))
+    threads.append(thread)
+    thread.start()
+    
+
+for thread in threads:
+    thread.join()
+
+'''
+for ar in rel_artitst:
     ar_songs = top_songs_call(ar)
     ar_songs_df = pd.DataFrame(ar_songs)
     songs = pd.concat([songs, ar_songs_df])
-print(songs)
+'''
+
+#print(songs)
 engine = db.create_engine('sqlite:///actual_data_frame.db')
 dataframe_to_database(songs)
 with engine.connect() as connection:
     connect = connection.execute(db.text("SELECT * FROM table_name;"))
     query_result = connect.fetchall()
-
+'''
     print(tabulate(pd.DataFrame(query_result),
                    ['artist', 'song', 'uri'],
                    tablefmt="grid",
                    maxcolwidths=[None, 15, 53]))
+'''
