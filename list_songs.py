@@ -118,24 +118,3 @@ with engine.connect() as connection:
                    ['artist', 'song', 'uri'],
                    tablefmt="grid",
                    maxcolwidths=[None, 15, 53]))
-
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
-                                               client_secret=client_secret,
-                                               redirect_uri=redirect_uri,
-                                               scope=scope))
-
-def create_playlist(username, playlist_name, songs):
-    user = sp.current_user()
-    user_id = user['id']
-    playlist = sp.user_playlist_create(user_id, playlist_name, public=True)
-    playlist_id = playlist['id']
-
-    track_uris = songs['track_uri'].tolist()
-    sp.playlist_add_items(playlist_id, track_uris)
-
-    print(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.")
-
-username = input("Enter your Spotify username: ")
-playlist_name = input("Enter the playlist name: ")
-
-create_playlist(username, playlist_name, songs)
