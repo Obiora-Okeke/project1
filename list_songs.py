@@ -43,7 +43,7 @@ def top_songs_call(art_name):
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/top-tracks',
                      headers=headers, params={'market': country_code})
     data = r.json()
-    top_songs = data['tracks'][:3]  # Limit to top 3 songs
+    top_songs = data['tracks'][:1]  # Limit to top 3 songs
     result = []
     for song in top_songs:
         artist_name = song['artists'][0]['name']
@@ -86,7 +86,7 @@ pd.set_option('max_colwidth', None)
 # client_secret = "f853c53fcfb94d66ab38091b16356421"
 CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
-redirect_uri = "https://localhost:8888/callback"
+redirect_uri = "http://example.com/"
 scope = "playlist-modify-public playlist-modify-private"
 AUTH_URL = "https://accounts.spotify.com/api/token"
 auth_response = requests.post(AUTH_URL, {
@@ -118,24 +118,3 @@ with engine.connect() as connection:
                    ['artist', 'song', 'uri'],
                    tablefmt="grid",
                    maxcolwidths=[None, 15, 53]))
-
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=client_id,
-                                               client_secret=client_secret,
-                                               redirect_uri=redirect_uri,
-                                               scope=scope))
-
-def create_playlist(username, playlist_name, songs):
-    user = sp.current_user()
-    user_id = user['id']
-    playlist = sp.user_playlist_create(user_id, playlist_name, public=True)
-    playlist_id = playlist['id']
-
-    track_uris = songs['track_uri'].tolist()
-    sp.playlist_add_items(playlist_id, track_uris)
-
-    print(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.")
-
-username = input("Enter your Spotify username: ")
-playlist_name = input("Enter the playlist name: ")
-
-create_playlist(username, playlist_name, songs)
