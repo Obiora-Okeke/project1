@@ -12,3 +12,9 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
+
+class ArtistForm(FlaskForm):
+    artist = StringField('Artist', validators=[DataRequired()])
+    username = StringField('Spotify Username', validators=[DataRequired()])
+    playlist_name = StringField('Playlist Name', validators=[DataRequired()])
+    submit = SubmitField('Generate Playlist')

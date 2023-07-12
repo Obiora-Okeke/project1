@@ -12,10 +12,6 @@ app.config['SECRET_KEY'] = '626423b656a4f6851a5cbece30f78108'
 def home():
   return render_template('home.html', subtitle='Home', text='This is home page')
 
-@app.route("/second_page")
-def second_page():
-  return render_template('second_page.html', subtitle='Second Page', text='This is the second page')
-
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -23,6 +19,9 @@ def register():
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('home')) # if so - send to home page
     return render_template('register.html', title='Register', form=form)
+@app.route("/spotify-generator")
+def spotify_generator():
+   return render_template('spotify_generator.html', title='Spotify Playlist Generator')
 
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")
