@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect
 from forms import RegistrationForm
 from flask_behind_proxy import FlaskBehindProxy
+# from make_album import playlist_id
 
 
 app = Flask(__name__)
@@ -22,6 +23,11 @@ def register():
 @app.route("/spotify-generator")
 def spotify_generator():
    return render_template('spotify_generator.html', title='Spotify Playlist Generator')
+
+@app.route('/success', methods=['GET', 'POST'])
+def playlist_created():
+  return render_template('success.html', title='Playlist Created')
+
 
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")
