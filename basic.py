@@ -31,5 +31,7 @@ def register():
     #     return redirect(url_for('home')) # if so - send to home page
     return render_template('register.html', title='Register', form=form)
 
+# @app.route('/success')
+
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")
