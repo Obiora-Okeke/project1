@@ -17,7 +17,6 @@ def home():
 
 @app.route("/spotify-generator", methods=['GET', 'POST'])
 def spotify_generator():
-    global x
     form = ArtistForm()
     if request.method == "POST":
         artist_name = request.form.get('artist')
@@ -31,13 +30,13 @@ def spotify_generator():
             ar_songs = top_songs_call(ar)
             ar_songs_df = pd.DataFrame(ar_songs)
             songs = pd.concat([songs, ar_songs_df])
-        x = create_playlist(username, playlist_name, songs)
+        create_playlist(username, playlist_name, songs)
         flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
-        return redirect(url_for('home'))
+
 
     return render_template('spotify_generator.html', title='Spotify Playlist Generator', form=form)
 @app.route('/success', methods=['GET', 'POST'])
 def playlist_created():
-  return render_template('success.html', title='Playlist Created')
+  return render_template('success.html', title='Playlist Created', playlist_id = x)
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
