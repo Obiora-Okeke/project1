@@ -4,14 +4,14 @@ import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 import spotipy.util as util
 
-x = ''
+# x = ''
 # def username_playlistname():
 #     username = input("Enter your Spotify username: ")
 #     playlist_name = input("Enter the playlist name: ")
 #     return username, playlist_name
 
 def create_playlist(username, playlist_name, songs):
-    global x
+    # global x
     token = util.prompt_for_user_token(username=username, 
                                     scope=scope, 
                                     client_id=CLIENT_ID,
