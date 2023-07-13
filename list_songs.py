@@ -29,8 +29,8 @@ def get_artist_id(artist_name):
     return None
 
 
-def api_call():
-    artist_name = input('Enter artist name: ')
+def api_call(artist_name):
+    # artist_name = input('Enter artist name: ')
     artist_id = get_artist_id(artist_name)
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
                      headers=headers)
@@ -76,10 +76,10 @@ def songs_dataframe(s):
     return sdf
 
 
-def dataframe_to_database(frame):
-    frame.to_sql(
-        'table_name', con=engine, if_exists='replace', index=False
-    )
+# def dataframe_to_database(frame):
+#     frame.to_sql(
+#         'table_name', con=engine, if_exists='replace', index=False
+#     )
 
 pd.set_option('max_colwidth', None)
 # client_id = "6b042ed0912244478c4a5e918259f88e"
@@ -99,22 +99,22 @@ auth_response_data = auth_response.json()
 access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
-dat = api_call()
-adf = json_to_dataframe(dat)
-rel_artitst = adf['name'].tolist()
-songs = pd.DataFrame()
-for ar in rel_artitst[:6]:
-    ar_songs = top_songs_call(ar)
-    ar_songs_df = pd.DataFrame(ar_songs)
-    songs = pd.concat([songs, ar_songs_df])
-print(songs)
-engine = db.create_engine('sqlite:///actual_data_frame.db')
-dataframe_to_database(songs)
-with engine.connect() as connection:
-    connect = connection.execute(db.text("SELECT * FROM table_name;"))
-    query_result = connect.fetchall()
+# dat = api_call()
+# adf = json_to_dataframe(dat)
+# rel_artitst = adf['name'].tolist()
+# songs = pd.DataFrame()
+# for ar in rel_artitst[:6]:
+#     ar_songs = top_songs_call(ar)
+#     ar_songs_df = pd.DataFrame(ar_songs)
+#     songs = pd.concat([songs, ar_songs_df])
+# print(songs)
+# engine = db.create_engine('sqlite:///actual_data_frame.db')
+# # dataframe_to_database(songs)
+# with engine.connect() as connection:
+#     connect = connection.execute(db.text("SELECT * FROM table_name;"))
+#     query_result = connect.fetchall()
 
-    print(tabulate(pd.DataFrame(query_result),
-                   ['artist', 'song', 'uri'],
-                   tablefmt="grid",
-                   maxcolwidths=[None, 15, 53]))
+#     print(tabulate(pd.DataFrame(query_result),
+#                    ['artist', 'song', 'uri'],
+#                    tablefmt="grid",
+#                    maxcolwidths=[None, 15, 53]))
