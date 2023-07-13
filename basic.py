@@ -54,6 +54,8 @@ def playlist_created():
           songs = pd.concat([songs, ar_songs_df])
       dataframe_to_database(songs)
       print('songs:', songs)
+      song_ids = songs['song_id'].to_list()
+      print(song_ids)
       x = create_playlist(username, playlist_name, songs)
       print(x)
       flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
