@@ -30,7 +30,6 @@ def get_artist_id(artist_name):
 
 
 def api_call(artist_name):
-    # artist_name = input('Enter artist name: ')
     artist_id = get_artist_id(artist_name)
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
                      headers=headers)
@@ -43,7 +42,7 @@ def top_songs_call(art_name):
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/top-tracks',
                      headers=headers, params={'market': country_code})
     data = r.json()
-    top_songs = data['tracks'][:1]  # Limit to top 3 songs
+    top_songs = data['tracks'][:3]  # Limit to top 3 songs
     result = []
     for song in top_songs:
         artist_name = song['artists'][0]['name']
@@ -59,10 +58,6 @@ def top_songs_call(art_name):
 
 def json_to_dataframe(data):
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
-    # if 'uri' in dataframe_name:
-    #     uris = dataframe_name['uri'].map(lambda x: x.get('spotify',
-    #                                                                'N/A'))
-    #     dataframe_name['uris'] = uris
     if 'followers' in dataframe_name:
         fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
         dataframe_name['followers'] = fol
@@ -76,14 +71,9 @@ def songs_dataframe(s):
     return sdf
 
 
-def dataframe_to_database(frame):
-    frame.to_sql(
-        'table_name', con=engine, if_exists='replace', index=False
-    )
-
 pd.set_option('max_colwidth', None)
-# client_id = "6b042ed0912244478c4a5e918259f88e"
-# client_secret = "f853c53fcfb94d66ab38091b16356421"
+# CLIENT_ID = "ce303767105943e9b563c582c546bcdf"
+# CLIENT_SECRET = "4f77f234a135413787ba25237ed8e819"
 CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
 redirect_uri = "http://example.com/"
@@ -99,22 +89,4 @@ auth_response_data = auth_response.json()
 access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
-# dat = api_call()
-# adf = json_to_dataframe(dat)
-# rel_artitst = adf['name'].tolist()
-# songs = pd.DataFrame()
-# for ar in rel_artitst[:6]:
-#     ar_songs = top_songs_call(ar)
-#     ar_songs_df = pd.DataFrame(ar_songs)
-#     songs = pd.concat([songs, ar_songs_df])
-# print(songs)
 engine = db.create_engine('sqlite:///actual_data_frame.db')
-# dataframe_to_database(songs)
-with engine.connect() as connection:
-    connect = connection.execute(db.text("SELECT * FROM table_name;"))
-    query_result = connect.fetchall()
-
-    print(tabulate(pd.DataFrame(query_result),
-                   ['artist', 'song', 'uri'],
-                   tablefmt="grid",
-                   maxcolwidths=[None, 15, 53]))
