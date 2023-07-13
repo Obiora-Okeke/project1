@@ -1,13 +1,15 @@
-from flask import Flask, render_template, url_for, flash, redirect
-from forms import RegistrationForm
+from flask import Flask, render_template, url_for, flash, redirect, request
+from forms import RegistrationForm, ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
-# from make_album import playlist_id
+from make_album import x
+import pandas as pd
 
 
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)  ## add this line
 app.config['SECRET_KEY'] = '626423b656a4f6851a5cbece30f78108'
 
+# x=''
 @app.route("/")
 @app.route("/home")
 def home():
@@ -21,12 +23,32 @@ def register():
         return redirect(url_for('home')) # if so - send to home page
     return render_template('register.html', title='Register', form=form)
 @app.route("/spotify-generator")
+@app.route("/spotify-generator", methods=['GET', 'POST'])
 def spotify_generator():
-   return render_template('spotify_generator.html', title='Spotify Playlist Generator')
+  #  pass
+    # form = ArtistForm()
+    # if request.method == "POST":
+    #     artist_name = request.form.get('artist')
+    #     username = request.form.get('username')
+    #     playlist_name = request.form.get('playlist')
+    #     dat = api_call(artist_name)
+    #     adf = json_to_dataframe(dat)
+    #     rel_artists = adf['name'].tolist()
+    #     songs = pd.DataFrame()
+    #     for ar in rel_artists[:2]:
+    #         ar_songs = top_songs_call(ar)
+    #         ar_songs_df = pd.DataFrame(ar_songs)
+    #         songs = pd.concat([songs, ar_songs_df])
+    #     x = create_playlist(username, playlist_name, songs)
+    #     flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
+        # return redirect(url_for('home'))
+    return render_template('spotify_generator.html', title='Spotify Playlist Generator')
+
 
 @app.route('/success', methods=['GET', 'POST'])
 def playlist_created():
-  return render_template('success.html', title='Playlist Created')
+  print('x val: ', x)
+  return render_template('success.html', title='Playlist Created', playlist_id = x)
 
 
 if __name__ == '__main__':
