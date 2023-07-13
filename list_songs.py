@@ -29,8 +29,8 @@ def get_artist_id(artist_name):
     return None
 
 
-def api_call():
-    artist_name = input('Enter artist name: ')
+def api_call(artist_name):
+    #artist_name = input('Enter artist name: ')
     artist_id = get_artist_id(artist_name)
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
                      headers=headers)
@@ -82,23 +82,24 @@ def dataframe_to_database(frame):
     )
 
 pd.set_option('max_colwidth', None)
-# client_id = "6b042ed0912244478c4a5e918259f88e"
-# client_secret = "f853c53fcfb94d66ab38091b16356421"
-CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
-redirect_uri = "http://example.com/"
+client_id = "ce303767105943e9b563c582c546bcdf"
+client_secret = "4f77f234a135413787ba25237ed8e819"
+#CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
+#CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
+redirect_uri = "http://example.com"
 scope = "playlist-modify-public playlist-modify-private"
 AUTH_URL = "https://accounts.spotify.com/api/token"
 auth_response = requests.post(AUTH_URL, {
     'grant_type': 'client_credentials',
-    'client_id': CLIENT_ID,
-    'client_secret': CLIENT_SECRET,
+    'client_id': client_id,
+    'client_secret': client_secret,
 })
 
 auth_response_data = auth_response.json()
 access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
+'''
 dat = api_call()
 adf = json_to_dataframe(dat)
 rel_artitst = adf['name'].tolist()
@@ -118,3 +119,4 @@ with engine.connect() as connection:
                    ['artist', 'song', 'uri'],
                    tablefmt="grid",
                    maxcolwidths=[None, 15, 53]))
+'''

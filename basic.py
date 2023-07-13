@@ -24,11 +24,22 @@ def register():
     return render_template('register.html', title='Register', form=form)
 @app.route("/spotify-generator", methods=['GET', 'POST'])
 def spotify_generator():
-    print("hello2")
     form = ArtistForm()
     if request.method == "POST":
-        print("Pizza")
+        artist_name = request.form.get('artist')
+        username = request.form.get('username')
+        playlist_name = request.form.get('playlist')
+        dat = api_call(artist_name)
+        adf = json_to_dataframe(dat)
+        rel_artists = adf['name'].tolist()
+        songs = pd.DataFrame()
+        for ar in rel_artists[:2]:
+            ar_songs = top_songs_call(ar)
+            ar_songs_df = pd.DataFrame(ar_songs)
+            songs = pd.concat([songs, ar_songs_df])
+        create_playlist(username, playlist_name, songs)
         
+
     if form.validate_on_submit():
         print("hello")
         artist_name = form.artist.data
