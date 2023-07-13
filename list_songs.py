@@ -49,10 +49,12 @@ def top_songs_call(art_name):
         artist_name = song['artists'][0]['name']
         song_name = song['name']
         uri = song['uri']
+        id = song['id']
         result.append({
             'artist': artist_name,
             'song': song_name,
-            'uri': uri
+            'uri': uri, 
+            'id': id
         })
     return result
 
@@ -66,9 +68,11 @@ def json_to_dataframe(data):
     if 'followers' in dataframe_name:
         fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
         dataframe_name['followers'] = fol
-    return dataframe_name[['name', 'uri', 'popularity',
-                           'followers']].sort_values('followers',
+    to_return = dataframe_name[['name', 'uri', 'popularity',
+                           'followers', 'id']].sort_values('followers',
                                                      ascending=False)
+    print(to_return)
+    return to_return 
 
 
 def songs_dataframe(s):
