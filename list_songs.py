@@ -48,11 +48,13 @@ def top_songs_call(art_name):
         artist_name = song['artists'][0]['name']
         song_name = song['name']
         uri = song['uri']
+        track_id = uri.split(':')[-1]  # Extract track ID from URI
         result.append({
             'artist': artist_name,
             'song': song_name,
-            'uri': uri
-        })
+            'uri': uri,
+            'track_id': track_id  # Add track ID to the result
+    })
     return result
 
 
@@ -72,10 +74,10 @@ def songs_dataframe(s):
 
 
 pd.set_option('max_colwidth', None)
-# CLIENT_ID = "ce303767105943e9b563c582c546bcdf"
-# CLIENT_SECRET = "4f77f234a135413787ba25237ed8e819"
-CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
+CLIENT_ID = "ce303767105943e9b563c582c546bcdf"
+CLIENT_SECRET = "4f77f234a135413787ba25237ed8e819"
+# CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
+# CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
 redirect_uri = "http://example.com/"
 scope = "playlist-modify-public playlist-modify-private"
 AUTH_URL = "https://accounts.spotify.com/api/token"

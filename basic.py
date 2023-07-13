@@ -38,7 +38,8 @@ def playlist_created():
           songs = pd.concat([songs, ar_songs_df])
       x = create_playlist(username, playlist_name, songs)
       flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
-      return render_template('success.html', title='Playlist Created', playlist_id = x)
+      track_ids = songs['track_id'].tolist()
+      return render_template('success.html', title='Playlist Created', playlist_id = x, track_ids=track_ids)
 
 
 if __name__ == '__main__':
