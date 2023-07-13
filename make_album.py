@@ -9,8 +9,9 @@ import spotipy.util as util
 # app = Flask(__name__)
 
 # @app.route('/')
-
+x = ''
 def create_playlist(username, playlist_name, songs):
+    global x
     token = util.prompt_for_user_token(username=username, 
                                         scope=scope, 
                                         client_id=client_id,
@@ -23,6 +24,7 @@ def create_playlist(username, playlist_name, songs):
     user = sp.user(username)
     playlist = sp.user_playlist_create(username, playlist_name, public=True, collaborative=False, description = 'recs')
     playlist_id = playlist['id']
+    x = playlist_id
     track_uris = songs['uri'].tolist()
     sp.playlist_add_items(playlist_id, track_uris)
 

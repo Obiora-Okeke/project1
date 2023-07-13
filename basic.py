@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
 from list_songs import api_call, json_to_dataframe, top_songs_call
-from make_album import create_playlist
+from make_album import create_playlist, x
 import pandas as pd
 
 
@@ -17,6 +17,7 @@ def home():
 
 @app.route("/spotify-generator", methods=['GET', 'POST'])
 def spotify_generator():
+    global x
     form = ArtistForm()
     if request.method == "POST":
         artist_name = request.form.get('artist')
@@ -30,7 +31,7 @@ def spotify_generator():
             ar_songs = top_songs_call(ar)
             ar_songs_df = pd.DataFrame(ar_songs)
             songs = pd.concat([songs, ar_songs_df])
-        create_playlist(username, playlist_name, songs)
+        x = create_playlist(username, playlist_name, songs)
         flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
         return redirect(url_for('home'))
 
