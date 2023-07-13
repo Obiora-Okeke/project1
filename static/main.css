@@ -1,17 +1,33 @@
 body {
+    font-family: 'Rajdhani', sans-serif;
     background: #1D5B79;
     color: #333333;
     margin-top: 5rem;
   }
   
   h1{
-    font-size:400%;
+    font-size:600%;
     text-transform:uppercase;
     color: #ffffff;
-    font-family: 'Lemon';
+    font-family: 'Rajdhani', sans-serif;
     text-align: center;
   }
-  h2, h3, h4, h5, h6 {
+  .inc250{
+    font-size:250%;
+    
+  }
+  .boxfo {
+    color: #F3AA60;
+    font-size:200%;
+  }
+  .but {
+    background-color: #F3AA60;
+    color:#468B97;
+    border-radius: 30px;
+  }
+
+  h2, h3, h4, h5, h6, p {
+    font-family: 'Rajdhani', sans-serif;
     color: #F3AA60;
   }
   
@@ -20,7 +36,7 @@ body {
   }
   
   .site-header .navbar-nav .nav-link {
-    color: #cbd5db;
+    color: #468B97;
   }
   
   .site-header .navbar-nav .nav-link:hover {
