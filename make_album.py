@@ -20,7 +20,6 @@ def create_playlist(username, playlist_name, songs):
     playlist_id = playlist['id']
     x = playlist_id
     track_uris = songs['uri'].tolist()
-    print('X1:' ,x)
     sp.playlist_add_items(playlist_id, track_uris)
     print(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.")
     return playlist_id
