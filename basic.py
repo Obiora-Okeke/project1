@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
-from forms import RegistrationForm, ArtistForm
+from forms import ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
 from list_songs import api_call, json_to_dataframe, top_songs_call
 from make_album import create_playlist
@@ -15,13 +15,6 @@ app.config['SECRET_KEY'] = '626423b656a4f6851a5cbece30f78108'
 def home():
   return render_template('home.html', subtitle='Home', text='This is home page')
 
-@app.route("/register", methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit(): # checks if entries are valid
-        flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('home')) # if so - send to home page
-    return render_template('register.html', title='Register', form=form)
 @app.route("/spotify-generator", methods=['GET', 'POST'])
 def spotify_generator():
     form = ArtistForm()
@@ -42,6 +35,8 @@ def spotify_generator():
         return redirect(url_for('home'))
 
     return render_template('spotify_generator.html', title='Spotify Playlist Generator', form=form)
-
+@app.route('/success', methods=['GET', 'POST'])
+def playlist_created():
+  return render_template('success.html', title='Playlist Created')
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
