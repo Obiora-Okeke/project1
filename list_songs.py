@@ -49,12 +49,12 @@ def top_songs_call(art_name):
         artist_name = song['artists'][0]['name']
         song_name = song['name']
         uri = song['uri']
-        id = song['id']
+        song_id = song['id']
         result.append({
             'artist': artist_name,
             'song': song_name,
             'uri': uri, 
-            'id': id
+            'song_id': song_id
         })
     return result
 
