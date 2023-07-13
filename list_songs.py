@@ -76,11 +76,6 @@ def songs_dataframe(s):
     return sdf
 
 
-def dataframe_to_database(frame):
-    frame.to_sql(
-        'table_name', con=engine, if_exists='replace', index=False
-    )
-
 pd.set_option('max_colwidth', None)
 client_id = "ce303767105943e9b563c582c546bcdf"
 client_secret = "4f77f234a135413787ba25237ed8e819"
