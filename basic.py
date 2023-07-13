@@ -38,27 +38,6 @@ def spotify_generator():
             ar_songs_df = pd.DataFrame(ar_songs)
             songs = pd.concat([songs, ar_songs_df])
         create_playlist(username, playlist_name, songs)
-        
-
-    if form.validate_on_submit():
-        print("hello")
-        artist_name = form.artist.data
-        username = form.username.data
-        playlist_name = form.playlist_name.data
-
-        # Process the artist input using your existing code
-        dat = api_call(artist_name)
-        adf = json_to_dataframe(dat)
-        rel_artists = adf['name'].tolist()
-        songs = pd.DataFrame()
-        for ar in rel_artists[:2]:
-            ar_songs = top_songs_call(ar)
-            ar_songs_df = pd.DataFrame(ar_songs)
-            songs = pd.concat([songs, ar_songs_df])
-
-        # Create the playlist using your existing code
-        create_playlist(username, playlist_name, songs)
-
         flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
         return redirect(url_for('home'))
 
