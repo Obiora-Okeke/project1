@@ -19,14 +19,14 @@
     </ul>
     <script>
         document.querySelector("form").onsubmit = function(e) {
-  
+
             //e.preventDefault();
-  
+
             let formData = new FormData();
             let artist = document.querySelector("input[name=artist]").value;
             let username = document.querySelector("input[name=username]").value;
             let playlist = document.querySelector("input[name=playlist]").value;
-  
+
             formData.append("artist", artist);
             formData.append("username", username);
             formData.append("playlist", playlist);
@@ -45,7 +45,7 @@
                 // Once it reaches here, the async is already successful
                 console.log("Successful async: ");
                 //redirect to success page
-  
+
             })
             .catch(function(error) {
                 console.log("Error in async", error);

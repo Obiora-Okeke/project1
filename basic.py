@@ -30,37 +30,38 @@ def home():
 def spotify_generator():
     # global x
     print('print pls')
-    form = ArtistForm()
-    if request.method == "POST":
-        artist_name = request.form.get('artist')
-        username = request.form.get('username')
-        playlist_name = request.form.get('playlist')
-        print('artist:' , artist_name)
-        print('playlist:', playlist_name)
-        print('username:', username)
-        dat = api_call(artist_name)
-        adf = json_to_dataframe(dat)
-        rel_artists = adf['name'].tolist()
-        songs = pd.DataFrame()
-        for ar in rel_artists[:2]:
-            ar_songs = top_songs_call(ar)
-            ar_songs_df = pd.DataFrame(ar_songs)
-            songs = pd.concat([songs, ar_songs_df])
-        dataframe_to_database(songs)
-        print('songs:', songs)
-        create_playlist(username, playlist_name, songs)
-        print(x)
-        flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
-        # return render_template('spotify_generator.html', title='Spotify Playlist Generator')
-        return redirect('/success')
     return render_template('spotify_generator.html', title='Spotify Playlist Generator')
 
 
 @app.route('/success', methods=['GET', 'POST'])
 def playlist_created():
+  form = ArtistForm()
+  if request.method == "POST":
+      artist_name = request.form.get('artist')
+      username = request.form.get('username')
+      playlist_name = request.form.get('playlist')
+      print('artist:' , artist_name)
+      print('playlist:', playlist_name)
+      print('username:', username)
+      dat = api_call(artist_name)
+      adf = json_to_dataframe(dat)
+      rel_artists = adf['name'].tolist()
+      songs = pd.DataFrame()
+      for ar in rel_artists[:2]:
+          ar_songs = top_songs_call(ar)
+          ar_songs_df = pd.DataFrame(ar_songs)
+          songs = pd.concat([songs, ar_songs_df])
+      dataframe_to_database(songs)
+      print('songs:', songs)
+      create_playlist(username, playlist_name, songs)
+      print(x)
+      flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
+      # return render_template('spotify_generator.html', title='Spotify Playlist Generator')
+      # return redirect('/succe')
+      return render_template('success.html', title='Playlist Created', playlist_id = x)
   print('x val: ', x)
-  return render_template('success.html', title='Playlist Created', playlist_id = x)
+  # return render_template('success.html', title='Playlist Created', playlist_id = x)
 
 
 if __name__ == '__main__':
-  app.run(debug=True, host="0.0.0.0", use_reloader=False)
+  app.run(debug=True, host="0.0.0.0")
