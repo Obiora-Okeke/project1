@@ -99,17 +99,8 @@ auth_response_data = auth_response.json()
 access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
-# dat = api_call()
-# adf = json_to_dataframe(dat)
-# rel_artitst = adf['name'].tolist()
-# songs = pd.DataFrame()
-# for ar in rel_artitst[:6]:
-#     ar_songs = top_songs_call(ar)
-#     ar_songs_df = pd.DataFrame(ar_songs)
-#     songs = pd.concat([songs, ar_songs_df])
-# print(songs)
 engine = db.create_engine('sqlite:///actual_data_frame.db')
-# dataframe_to_database(songs)
+
 with engine.connect() as connection:
     connect = connection.execute(db.text("SELECT * FROM table_name;"))
     query_result = connect.fetchall()

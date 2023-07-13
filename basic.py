@@ -5,26 +5,15 @@ from list_songs import api_call, json_to_dataframe, top_songs_call, dataframe_to
 from make_album import create_playlist
 import pandas as pd
 
-
+x=''
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)  ## add this line
 app.config['SECRET_KEY'] = '626423b656a4f6851a5cbece30f78108'
-# x = ''
 
-x=''
 @app.route("/")
 @app.route("/home")
 def home():
   return render_template('home.html', subtitle='Home', text='This is home page')
-
-# @app.route("/register", methods=['GET', 'POST'])
-# def register():
-#     form = RegistrationForm()
-#     if form.validate_on_submit(): # checks if entries are valid
-#         flash(f'Account created for {form.username.data}!', 'success')
-#         return redirect(url_for('home')) # if so - send to home page
-#     return render_template('register.html', title='Register', form=form)
-# @app.route("/spotify-generator")
 
 @app.route("/spotify-generator", methods=['GET', 'POST'])
 def spotify_generator():
@@ -57,11 +46,8 @@ def playlist_created():
       x = create_playlist(username, playlist_name, songs)
       print(x)
       flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
-      # return render_template('spotify_generator.html', title='Spotify Playlist Generator')
-      # return redirect('/succe')
       return render_template('success.html', title='Playlist Created', playlist_id = x)
   print('x val: ', x)
-  # return render_template('success.html', title='Playlist Created', playlist_id = x)
 
 
 if __name__ == '__main__':
