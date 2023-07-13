@@ -82,8 +82,8 @@ def dataframe_to_database(frame):
     )
 
 pd.set_option('max_colwidth', None)
-# client_id = "6b042ed0912244478c4a5e918259f88e"
-# client_secret = "f853c53fcfb94d66ab38091b16356421"
+# CLIENT_ID = "6b042ed0912244478c4a5e918259f88e"
+# CLIENT_SECRET = "f853c53fcfb94d66ab38091b16356421"
 CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
 CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
 redirect_uri = "http://example.com/"
