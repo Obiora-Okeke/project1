@@ -103,7 +103,7 @@ dat = api_call()
 adf = json_to_dataframe(dat)
 rel_artitst = adf['name'].tolist()
 songs = pd.DataFrame()
-for ar in rel_artitst[:2]:
+for ar in rel_artitst[:6]:
     ar_songs = top_songs_call(ar)
     ar_songs_df = pd.DataFrame(ar_songs)
     songs = pd.concat([songs, ar_songs_df])

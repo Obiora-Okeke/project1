@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import RegistrationForm, ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
-from make_album import x
+from make_album import create_playlist, x
 import pandas as pd
 
 
@@ -22,7 +22,8 @@ def register():
         flash(f'Account created for {form.username.data}!', 'success')
         return redirect(url_for('home')) # if so - send to home page
     return render_template('register.html', title='Register', form=form)
-@app.route("/spotify-generator")
+# @app.route("/spotify-generator")
+
 @app.route("/spotify-generator", methods=['GET', 'POST'])
 def spotify_generator():
   #  pass
@@ -42,6 +43,10 @@ def spotify_generator():
     #     x = create_playlist(username, playlist_name, songs)
     #     flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
         # return redirect(url_for('home'))
+    # artist_name = request.form.get('artist')
+    # username = request.form.get('username')
+    # playlist_name = request.form.get('playlist')
+    # create_playlist(artist_name, playlist_name=playlist_name, )
     return render_template('spotify_generator.html', title='Spotify Playlist Generator')
 
 
@@ -52,4 +57,4 @@ def playlist_created():
 
 
 if __name__ == '__main__':
-  app.run(debug=True, host="0.0.0.0")
+  app.run(debug=True, host="0.0.0.0", use_reloader=False)
