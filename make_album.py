@@ -32,7 +32,7 @@ def create_playlist(username, playlist_name, songs):
     sp.playlist_add_items(playlist_id, track_uris)
 
     print(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.")
-    return x
+    return playlist_id
 
 # username, playlist_name = username_playlistname()
 
