@@ -76,10 +76,10 @@ def songs_dataframe(s):
     return sdf
 
 
-# def dataframe_to_database(frame):
-#     frame.to_sql(
-#         'table_name', con=engine, if_exists='replace', index=False
-#     )
+def dataframe_to_database(frame):
+    frame.to_sql(
+        'table_name', con=engine, if_exists='replace', index=False
+    )
 
 pd.set_option('max_colwidth', None)
 # client_id = "6b042ed0912244478c4a5e918259f88e"
@@ -108,13 +108,13 @@ BASE_URL = 'https://api.spotify.com/v1/'
 #     ar_songs_df = pd.DataFrame(ar_songs)
 #     songs = pd.concat([songs, ar_songs_df])
 # print(songs)
-# engine = db.create_engine('sqlite:///actual_data_frame.db')
-# # dataframe_to_database(songs)
-# with engine.connect() as connection:
-#     connect = connection.execute(db.text("SELECT * FROM table_name;"))
-#     query_result = connect.fetchall()
+engine = db.create_engine('sqlite:///actual_data_frame.db')
+# dataframe_to_database(songs)
+with engine.connect() as connection:
+    connect = connection.execute(db.text("SELECT * FROM table_name;"))
+    query_result = connect.fetchall()
 
-#     print(tabulate(pd.DataFrame(query_result),
-#                    ['artist', 'song', 'uri'],
-#                    tablefmt="grid",
-#                    maxcolwidths=[None, 15, 53]))
+    print(tabulate(pd.DataFrame(query_result),
+                   ['artist', 'song', 'uri'],
+                   tablefmt="grid",
+                   maxcolwidths=[None, 15, 53]))

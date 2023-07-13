@@ -1,6 +1,4 @@
 from list_songs import CLIENT_ID, CLIENT_SECRET, scope
-# from basic import playlist_name, artist_name, username
-# from spotify_recs import adf
 import requests
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
@@ -30,7 +28,6 @@ def create_playlist(username, playlist_name, songs):
     track_uris = songs['uri'].tolist()
     print('X1:' ,x)
     sp.playlist_add_items(playlist_id, track_uris)
-
     print(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.")
     return playlist_id
 
