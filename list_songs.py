@@ -10,6 +10,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 import spotipy.util as util
 
+global_songs = []
+
 def get_artist_id(artist_name):
     search_response = requests.get(BASE_URL + 'search',
                                    headers=headers,
@@ -60,6 +62,7 @@ def top_songs_call(art_name):
 
 
 def json_to_dataframe(data):
+    global global_songs
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
     # if 'uri' in dataframe_name:
     #     uris = dataframe_name['uri'].map(lambda x: x.get('spotify',
@@ -72,6 +75,7 @@ def json_to_dataframe(data):
                            'followers', 'id']].sort_values('followers',
                                                      ascending=False)
     print(to_return)
+    global_songs = to_return
     return to_return 
 
 
