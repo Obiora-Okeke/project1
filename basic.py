@@ -42,12 +42,19 @@ def require_login(view):
 
 @app.before_request
 def check_login():
-    if request.endpoint and request.endpoint != 'login' and not is_logged_in():
+    if not is_logged_in() and request.endpoint != 'static' and request.endpoint != 'login' and request.endpoint != 'register':
         return redirect(url_for('login'))
+
+@app.before_request
+def logout_on_close():
+    if not request.referrer:
+        session.clear()
 
 @app.route("/")
 @app.route("/home")
 def home():
+    if not is_logged_in():
+        return redirect(url_for('login'))
     return render_template('home.html', subtitle='Home', text='This is the home page')
 
 @app.route("/spotify-generator", methods=['GET', 'POST'])
@@ -100,7 +107,7 @@ def playlist_created():
     global x
     if request.method == "POST":
         artist_name = request.form.get('artist')
-        username = session['username']
+        username = request.form.get('username')
         playlist_name = request.form.get('playlist')
         dat = api_call(artist_name)
         adf = json_to_dataframe(dat)
