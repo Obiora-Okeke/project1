@@ -24,22 +24,6 @@ def set_songs_df(df):
     global songs
     songs = df
 
-# def create(artist_name, ):
-#     global songs
-#     dat = api_call(artist_name)
-#     adf = json_to_dataframe(dat)
-#     rel_artists = adf['name'].tolist()
-#     # songs = pd.DataFrame()
-#     for ar in rel_artists[:5]:
-#         ar_songs = top_songs_call(ar)
-#         ar_songs_df = pd.DataFrame(ar_songs)
-#         songs = pd.concat([songs, ar_songs_df])
-#         # dataframe_to_database(songs)
-#     print('songs:', songs)
-#     song_ids = songs['song_id'].to_list()
-#     print(song_ids)
-    # x = create_playlist(username, playlist_name, songs)
-
 def get_lyrics(x='The Box'):
     global genius_song_ids
     song = genius.search_song(x)
@@ -60,22 +44,46 @@ def get_annotations(x):
     request = genius.referents(song_id=x, per_page=50)
     # print('requests:', request)
     # print(request)
-    annotations = [y for x in request['referents'] for y in x['annotations']]
-    print('annotations no: ', len(annotations))
-    print(annotations)
-    fragments = [y['fragment'] for y in request['referents']]
-    print(fragments)
-    print('fragments no: ', len(fragments))
+    annotation_ids = [y['id'] for x in request['referents'] for y in x['annotations']]
+    # print(annotation_ids)
+    # check = [annotation_ids[0]]
+    # trial = genius.referent(check)
+    # print(trial['referent']['fragment'])
+    # annotations = trial['referent']['annotations']
+    # for annotation in annotations:
+    #     content = annotation['body']['plain']
+    #     annotation_dict['annotation_id'] = [fragment, annotation]
+    # print(content)
+    # # print(type(annotation))
+    # print(vars(annotation))
+    # print(trial['referent']['annotations'])
+    
+
+    # annotations = [y for x in request['referents'] for y in x['annotations']]
+    # print('annotations no: ', len(annotations))
+    # print(annotations)
+    # fragments = [y['fragment'] for y in request['referents']]
+    # print(fragments)
+    # print('fragments no: ', len(fragments))
     annotation_dict = {}
-    count = 0
-    for annotation in annotations:
-        fragment = fragments[count]
-        annotation_dict[annotation['id']] = [fragment, annotation['body']]
-        count += 1
-    # print(annotation_dict)
-    # print(annotation_dict)
+    # count = 0
+    # for annotation in annotations:
+    #     fragment = fragments[count]
+    #     annotation_dict[annotation['id']] = [fragment, annotation['body']]
+    #     count += 1
+    # referents = genius.referent(annotation_ids)
+    # print(referents[0])
+    for annotation_id in annotation_ids:
+        referent = genius.referent([annotation_id])
+        fragment = referent['referent']['fragment']
+        annotations = referent['referent']['annotations']
+        for annotation in annotations:
+            content = annotation['body']['plain']
+            annotation_dict[annotation_id] = [fragment, content]
+    print(annotation_dict)
     return annotation_dict
 
+#fragment: portion of lyrics being annotated
 def create_annotation(text, webpage, referent):
     genius.create_annotation(annotation=text, raw_annotable=webpage, fragment=referent)
 
