@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
 from list_songs import api_call, json_to_dataframe, top_songs_call, dataframe_to_database
+from genius import get_genius_info, set_songs_df
 from make_album import create_playlist
 import pandas as pd
 
@@ -52,7 +53,9 @@ def playlist_created():
           ar_songs = top_songs_call(ar)
           ar_songs_df = pd.DataFrame(ar_songs)
           songs = pd.concat([songs, ar_songs_df])
-      dataframe_to_database(songs)
+      set_songs_df(songs)
+      get_genius_info()
+      # dataframe_to_database(songs)
       print('songs:', songs)
       song_ids = songs['song_id'].to_list()
       print(song_ids)
