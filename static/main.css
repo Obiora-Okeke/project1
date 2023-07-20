@@ -20,6 +20,17 @@ h1{
   color: #1DB954;
   font-size:200%;
 }
+
+.pnlabel {
+  color: #1DB954;
+  font-size:100%;
+}
+.rmspace {
+  margin-bottom: 0px; /* Adjust this value as needed */
+}
+.addspace {
+  margin-bottom: 25px; /* Adjust this value as needed */
+}
 .but {
   background-color: #1DB954;
   color:#ffffff;

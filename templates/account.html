@@ -13,21 +13,23 @@
 </head>
 <body>
   {% extends 'base.html' %}
-
-    {% block title %}Login{% endblock %}
-    {% block content %}
-  <h1>Welcome, {{ username }}!</h1>
-  <h2>Your Playlists:</h2>
+{% block title %}Login{% endblock %}
+{% block content %}
+<h1>Welcome, {{ username }}!</h1>
+<h2>Your Playlists:</h2>
 {% if playlist_ids %}
     <ul>
         {% for playlist_id in playlist_ids %}
-            <li><a href="https://open.spotify.com/playlist/{{ playlist_id }}">Playlist {{ loop.index }}</a></li>
+            <li class="addspace">
+                <p class="pnlabel rmspace">{{ playlist_names[loop.index0] }}</p>
+                <a href="https://open.spotify.com/playlist/{{ playlist_id }}">link to the playlist</a>
+            </li>
         {% endfor %}
     </ul>
 {% else %}
     <p>You have not created any playlists yet.</p>
 {% endif %}
-  <a href="{{ url_for('logout') }}">Logout</a>
-  {% endblock %}
+<a class="btn but" href="{{ url_for('logout') }}">Logout</a>
+{% endblock %}
 </body>
 </html>

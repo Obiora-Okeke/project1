@@ -22,6 +22,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     playlist_ids = db.Column(db.String(), nullable=True)
+    playlist_names = db.Column(db.String(), nullable=True)
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -126,10 +127,12 @@ def playlist_created():
         username = session['username']
         user = User.query.filter_by(username=username).first()
         if user:
-            if user.playlist_ids:
+            if user.playlist_ids and user.playlist_names:
                 user.playlist_ids += f',{x}'
+                user.playlist_names += f',{playlist_name}'
             else:
                 user.playlist_ids = str(x)
+                user.playlist_names = str(playlist_name)
             db.session.commit()
         else:
             flash('User not found.', 'danger')
@@ -144,11 +147,14 @@ def account():
     user = User.query.filter_by(username=username).first()
     if user and user.playlist_ids:
         playlist_ids = user.playlist_ids.split(',')
+        playlist_names = user.playlist_names.split(',') if user.playlist_names else []
     else:
         playlist_ids = []
-    return render_template('account.html', title='Account', username=username, playlist_ids=playlist_ids)
+        playlist_names = []
+    return render_template('account.html', title='Account', username=username, playlist_ids=playlist_ids, playlist_names=playlist_names)
 
 if __name__ == '__main__':
     with app.app_context():
+        db.drop_all()
         db.create_all()
     app.run(debug=True, host="0.0.0.0")
