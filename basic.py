@@ -6,6 +6,7 @@ from make_album import create_playlist
 import pandas as pd
 import functools
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 x = ''
 
@@ -20,13 +21,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    playlist_ids = db.Column(db.String(), nullable=True)
 
     def __repr__(self):
         return f'<User {self.username}>'
-
-def create_tables():
-    with app.app_context():
-        db.create_all()
+    
+migrate = Migrate(app, db)
 
 def is_logged_in():
     return 'username' in session
@@ -107,7 +107,7 @@ def playlist_created():
     global x
     if request.method == "POST":
         artist_name = request.form.get('artist')
-        username = request.form.get('username')
+        spotify_username = request.form.get('username')
         playlist_name = request.form.get('playlist')
         dat = api_call(artist_name)
         adf = json_to_dataframe(dat)
@@ -117,17 +117,37 @@ def playlist_created():
             ar_songs = top_songs_call(ar)
             ar_songs_df = pd.DataFrame(ar_songs)
             songs = pd.concat([songs, ar_songs_df])
-        x = create_playlist(username, playlist_name, songs)
+        x = create_playlist(spotify_username, playlist_name, songs)
         flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
+
+        # Get the user and call the function to update playlist_ids
+        username = session['username']
+        user = User.query.filter_by(username=username).first()
+        if user:
+            # Update the user's playlist_ids attribute with the new playlist ID
+            if user.playlist_ids:
+                user.playlist_ids += f',{x}'
+            else:
+                user.playlist_ids = str(x)
+            db.session.commit()
+        else:
+            flash('User not found.', 'danger')
+
         track_ids = songs['track_id'].tolist()
-        return render_template('success.html', title='Playlist Created', playlist_id=x, track_ids=track_ids)
+        return render_template('success.html', title='Playlist Created', playlist_id=x, track_ids=track_ids, username=username)
 
 @app.route('/account')
 @require_login
 def account():
     username = session['username']
-    return render_template('account.html', title='Account', username=username)
+    user = User.query.filter_by(username=username).first()
+    if user and user.playlist_ids:
+        playlist_ids = user.playlist_ids.split(',')
+    else:
+        playlist_ids = []
+    return render_template('account.html', title='Account', username=username, playlist_ids=playlist_ids)
 
 if __name__ == '__main__':
-    create_tables()  # Create the database tables
+    with app.app_context():
+        db.create_all()
     app.run(debug=True, host="0.0.0.0")
