@@ -32,7 +32,6 @@ def get_artist_id(artist_name):
 
 
 def api_call(artist_name):
-    # artist_name = input('Enter artist name: ')
     artist_id = get_artist_id(artist_name)
     r = requests.get(BASE_URL + 'artists/' + artist_id + '/related-artists',
                      headers=headers)
@@ -51,23 +50,19 @@ def top_songs_call(art_name):
         artist_name = song['artists'][0]['name']
         song_name = song['name']
         uri = song['uri']
-        song_id = song['id']
+        track_id = uri.split(':')[-1]  # Extract track ID from URI
         result.append({
             'artist': artist_name,
             'song': song_name,
-            'uri': uri, 
-            'song_id': song_id
-        })
+            'uri': uri,
+            'track_id': track_id  # Add track ID to the result
+    })
     return result
 
 
 def json_to_dataframe(data):
     global global_songs
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
-    # if 'uri' in dataframe_name:
-    #     uris = dataframe_name['uri'].map(lambda x: x.get('spotify',
-    #                                                                'N/A'))
-    #     dataframe_name['uris'] = uris
     if 'followers' in dataframe_name:
         fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
         dataframe_name['followers'] = fol
@@ -84,17 +79,12 @@ def songs_dataframe(s):
     return sdf
 
 
-def dataframe_to_database(frame):
-    frame.to_sql(
-        'table_name', con=engine, if_exists='replace', index=False
-    )
-
 pd.set_option('max_colwidth', None)
-# client_id = "6b042ed0912244478c4a5e918259f88e"
-# client_secret = "f853c53fcfb94d66ab38091b16356421"
-CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
-redirect_uri = "http://example.com/"
+CLIENT_ID = "a166e30a445349bfbea9de8fc9f5cde3"
+CLIENT_SECRET = "379c776f28824e80863ea3d8155fe6ae"
+# CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
+# CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
+redirect_uri = "https://example.com"
 scope = "playlist-modify-public playlist-modify-private"
 AUTH_URL = "https://accounts.spotify.com/api/token"
 auth_response = requests.post(AUTH_URL, {
@@ -107,15 +97,6 @@ auth_response_data = auth_response.json()
 access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
-# dat = api_call()
-# adf = json_to_dataframe(dat)
-# rel_artitst = adf['name'].tolist()
-# songs = pd.DataFrame()
-# for ar in rel_artitst[:6]:
-#     ar_songs = top_songs_call(ar)
-#     ar_songs_df = pd.DataFrame(ar_songs)
-#     songs = pd.concat([songs, ar_songs_df])
-# print(songs)
 engine = db.create_engine('sqlite:///actual_data_frame.db')
 # dataframe_to_database(songs)
 with engine.connect() as connection:
