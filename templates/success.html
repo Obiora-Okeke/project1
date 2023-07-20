@@ -7,36 +7,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300&display=swap');
+        @import url('https://db.onlinewebfonts.com/c/01173b246d9d9ea808ea75a26b3b61bb?family=CircularSpotifyTxT-Black');
     </style>
-  <link rel="stylesheet" type="text/css" href='static/main.css'>
+    <link rel="stylesheet" type="text/css" href='static/main.css'>
     <title>Album Successfully Created</title>
 </head>
-<body>
-    <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-          <div class="container">
-            <a class="navbar-brand mr-4 inc250" href="/">SPG</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggle">
-              <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="/">Home</a>
-                <a class="nav-item nav-link" href="/login">Login</a>
-                <a class="nav-item nav-link" href="/register">Register</a>
-                <a class="nav-item nav-link" href="/account">Account</a>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
+<body class="left-right-margin">
+  {% extends 'base.html' %}
+
+  {% block title %}Success{% endblock %}
+  {% block content %}
+<br>
 <h1>Your album has been created!</h1>
 <h2 class="inc250"> You can now see your playlist in your Spotify account. </h2>
-<h3> External Link: </h3>
-    <ul>
-
-        <li> <a class="inc250" href="https://open.spotify.com/playlist/{{playlist_id}}"> View Playlist <img src="img/spotify_icon.jpg"/> </a> </li>
-    </ul>
+<a class="inc250" href="https://open.spotify.com/playlist/{{playlist_id}}"> View Playlist in Spotify <img src="img\spotifyLogo.png"> </a><br>
+<a class="btn btn-primary inc250 but top-bottom-margin" href="/spotify-generator">Generate Another Playlist</a>
     <script>
         document.querySelector("form").onsubmit = function(e) {
 
@@ -76,5 +61,8 @@
 {% for track_id in track_ids %}
     <iframe class="test3" style="border-radius:12px" src="https://open.spotify.com/embed/track/{{ track_id }}?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 {% endfor %}
+<br>
+<br>
+{% endblock %}
 </body>
 </html>

@@ -12,24 +12,10 @@
   <title>Account</title>
 </head>
 <body>
-  <header class="site-header">
-    <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-      <div class="container">
-        <a class="navbar-brand mr-4 inc250" href="/">SPG</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarToggle">
-          <div class="navbar-nav mr-auto">
-            <a class="nav-item nav-link" href="/">Home</a>
-            <a class="nav-item nav-link" href="/login">Login</a>
-            <a class="nav-item nav-link" href="/register">Register</a>
-            <a class="nav-item nav-link" href="/account">Account</a>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </header>
+  {% extends 'base.html' %}
+
+    {% block title %}Login{% endblock %}
+    {% block content %}
   <h1>Welcome, {{ username }}!</h1>
   <h2>Your Playlists:</h2>
 {% if playlist_ids %}
@@ -42,5 +28,6 @@
     <p>You have not created any playlists yet.</p>
 {% endif %}
   <a href="{{ url_for('logout') }}">Logout</a>
+  {% endblock %}
 </body>
 </html>

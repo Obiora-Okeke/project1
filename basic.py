@@ -57,6 +57,10 @@ def home():
         return redirect(url_for('login'))
     return render_template('home.html', subtitle='Home', text='This is the home page')
 
+@app.route("/about")
+def about():
+   return render_template('about.html', text="This is the about page.", title = 'About Page')
+
 @app.route("/spotify-generator", methods=['GET', 'POST'])
 @require_login
 def spotify_generator():
@@ -119,12 +123,9 @@ def playlist_created():
             songs = pd.concat([songs, ar_songs_df])
         x = create_playlist(spotify_username, playlist_name, songs)
         flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
-
-        # Get the user and call the function to update playlist_ids
         username = session['username']
         user = User.query.filter_by(username=username).first()
         if user:
-            # Update the user's playlist_ids attribute with the new playlist ID
             if user.playlist_ids:
                 user.playlist_ids += f',{x}'
             else:
