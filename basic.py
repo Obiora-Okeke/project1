@@ -19,6 +19,9 @@ def home():
 def spotify_generator():
     return render_template('spotify_generator.html', title='Spotify Playlist Generator')
 
+@app.route("/about")
+def about():
+   return render_template('about.html', text="This is the about page.", title = 'About Page')
 
 @app.route('/success', methods=['GET', 'POST'])
 def playlist_created():
