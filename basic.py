@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
-from list_songs import api_call, json_to_dataframe, top_songs_call, dataframe_to_database
+from list_songs import api_call, json_to_dataframe, top_songs_call
 from genius import get_genius_info, set_songs_df
 from make_album import create_playlist
 import pandas as pd
@@ -40,17 +40,19 @@ def playlist_created():
           ar_songs = top_songs_call(ar)
           ar_songs_df = pd.DataFrame(ar_songs)
           songs = pd.concat([songs, ar_songs_df])
-      set_songs_df(songs)
-      get_genius_info()
-      # dataframe_to_database(songs)
+      # set_songs_df(songs)
+      # get_genius_info()1
       print('songs:', songs)
-      song_ids = songs['song_id'].to_list()
+      song_ids = songs['track_id'].to_list()
       print(song_ids)
       x = create_playlist(username, playlist_name, songs)
       flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
       track_ids = songs['track_id'].tolist()
       return render_template('success.html', title='Playlist Created', playlist_id = x, track_ids=track_ids)
 
+@app.route("/get-lyrics")
+def getLyrics():
+   
 
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")

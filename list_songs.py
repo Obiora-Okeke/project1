@@ -80,10 +80,10 @@ def songs_dataframe(s):
 
 
 pd.set_option('max_colwidth', None)
-CLIENT_ID = "a166e30a445349bfbea9de8fc9f5cde3"
-CLIENT_SECRET = "379c776f28824e80863ea3d8155fe6ae"
-# CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
-# CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
+# CLIENT_ID = "a166e30a445349bfbea9de8fc9f5cde3"
+# CLIENT_SECRET = "379c776f28824e80863ea3d8155fe6ae"
+CLIENT_ID = os.environ.get('SPOTIFY_CLIENT_ID')
+CLIENT_SECRET = os.environ.get('SPOTIFY_CLIENT_SECRET')
 redirect_uri = "https://example.com"
 scope = "playlist-modify-public playlist-modify-private"
 AUTH_URL = "https://accounts.spotify.com/api/token"
@@ -97,11 +97,11 @@ auth_response_data = auth_response.json()
 access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
-engine = db.create_engine('sqlite:///actual_data_frame.db')
-# dataframe_to_database(songs)
-with engine.connect() as connection:
-    connect = connection.execute(db.text("SELECT * FROM table_name;"))
-    query_result = connect.fetchall()
+# engine = db.create_engine('sqlite:///actual_data_frame.db')
+# # dataframe_to_database(songs)
+# with engine.connect() as connection:
+#     connect = connection.execute(db.text("SELECT * FROM table_name;"))
+#     query_result = connect.fetchall()
 
     # print(tabulate(pd.DataFrame(query_result),
     #                ['artist', 'song', 'uri'],

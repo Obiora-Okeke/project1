@@ -1,7 +1,7 @@
 from lyricsgenius import Genius
 from list_songs import global_songs
 import pandas as pd
-from list_songs import api_call, json_to_dataframe, top_songs_call, dataframe_to_database
+# from list_songs import api_call, json_to_dataframe, top_songs_call, dataframe_to_database
 from make_album import create_playlist
 import urllib, urllib.request
 from bs4 import BeautifulSoup
@@ -103,8 +103,8 @@ def get_genius_info():
 
 # create()
 
-song = genius.search_song('Ransom')
-get_annotations(song.id)
+# song = genius.search_song('Ransom')
+# get_annotations(song.id)
 # print(vars(song))
 # request = genius.referents(song_id=5068155, per_page=50)
 # print(request)
