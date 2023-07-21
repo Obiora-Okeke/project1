@@ -10,7 +10,7 @@ def create_playlist(username, playlist_name, songs):
                                     scope=scope, 
                                     client_id=CLIENT_ID,
                                     client_secret=CLIENT_SECRET, 
-                                    redirect_uri='http://example.com/')
+                                    redirect_uri='https://example.com')
     if token:
         sp = spotipy.Spotify(auth=token)
     else:
