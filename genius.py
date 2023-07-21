@@ -8,7 +8,6 @@ from bs4 import BeautifulSoup
 import requests
 import json
 
-
 CLIENT_ID = 'bZm1B5vrRPoI1-vRDCt3gKkFOsWDaMqWR-xjiT7iMEBQj0bVQoI38i1mOrEGYAjm'
 CLIENT_SECRET = '5ZJNhpisxNRxKKf5sk4cKEx0DfEki4S6w3HQgWsyEPg653jJosX1200FaHZy1oGlN3R1Opu6OjyKdAfuxIywPg'
 
@@ -20,17 +19,19 @@ genius = Genius(access_token)
 songs = pd.DataFrame()
 genius_song_ids = []
 
+
 def set_songs_df(df):
     global songs
     songs = df
 
-def get_lyrics(x='The Box'):
+def get_lyrics(x):
     global genius_song_ids
     song = genius.search_song(x)
     URL = song.url
     page = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15'})
     soup = BeautifulSoup(page.content, "html.parser")
     text = soup.select_one('div[class^="Lyrics__Container"], .lyrics').get_text(strip=True, separator='\n')
+    # site_json=json.loads(text)
     # print(text)
 
     # song = genius.search_song(x)
@@ -38,6 +39,7 @@ def get_lyrics(x='The Box'):
     # lyrics = song.lyrics
     # formatted_lyrics = lyrics.replace('\r', '').replace('[', '').replace(']', '').strip()
     # formatted_lyrics = f"""{formatted_lyrics}"""
+    # print(site_json)
     return text
 
 def get_annotations(x):

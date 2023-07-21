@@ -2,11 +2,12 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
 from list_songs import api_call, json_to_dataframe, top_songs_call
-from genius import get_genius_info, set_songs_df
+from genius import get_lyrics
 from make_album import create_playlist
 import pandas as pd
 
 x=''
+id_name_dict = {}
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '626423b656a4f6851a5cbece30f78108'
@@ -28,6 +29,7 @@ def about():
 def playlist_created():
   form = ArtistForm()
   global x
+  global id_name_dict
   if request.method == "POST":
       artist_name = request.form.get('artist')
       username = request.form.get('username')
@@ -43,16 +45,28 @@ def playlist_created():
       # set_songs_df(songs)
       # get_genius_info()1
       print('songs:', songs)
-      song_ids = songs['track_id'].to_list()
-      print(song_ids)
+      # song_ids = songs['track_id'].to_list()
+      song_names = songs['song'].to_list()
+      # print(song_ids)
       x = create_playlist(username, playlist_name, songs)
       flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
       track_ids = songs['track_id'].tolist()
+      id_name_dict = {track_ids[i]: song_names[i] for i in range(len(track_ids))}
+      print(id_name_dict)
       return render_template('success.html', title='Playlist Created', playlist_id = x, track_ids=track_ids)
 
-@app.route("/get-lyrics")
+@app.route("/get-lyrics", methods=['GET', 'POST'])
 def getLyrics():
+   if request.method == "POST":
+      song_id = request.form.get('id')
+      print(song_id)
+      song_name = id_name_dict[song_id]
+      lyrics = get_lyrics(song_name)
+      print(lyrics)
+      return lyrics
    
 
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")
+
+#. ~/.bashrc
