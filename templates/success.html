@@ -7,11 +7,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300&display=swap');
+        @import url('https://db.onlinewebfonts.com/c/01173b246d9d9ea808ea75a26b3b61bb?family=CircularSpotifyTxT-Black');
     </style>
-  <link rel="stylesheet" type="text/css" href='static/main.css'>
+    <link rel="stylesheet" type="text/css" href='static/main.css'>
     <title>Album Successfully Created</title>
 </head>
+<<<<<<< HEAD
 <body>
+=======
+<body class="left-right-margin">
+>>>>>>> 76e0a5d6f614c7bd49f1932abc7c1652547b8017
     <header class="site-header">
         <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
           <div class="container">
@@ -22,21 +27,29 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
               <div class="navbar-nav mr-auto">
                 <a class="nav-item nav-link" href="/">Home</a>
+<<<<<<< HEAD
                 <a class="nav-item nav-link" href="/login">Login</a>
                 <a class="nav-item nav-link" href="/register">Register</a>
                 <a class="nav-item nav-link" href="/account">Account</a>
+=======
+                <a class="nav-item nav-link" href="/about">About</a>
+>>>>>>> 76e0a5d6f614c7bd49f1932abc7c1652547b8017
               </div>
             </div>
           </div>
         </nav>
+<<<<<<< HEAD
       </header>
+=======
+    </header>
+
+    
+<br>
+>>>>>>> 76e0a5d6f614c7bd49f1932abc7c1652547b8017
 <h1>Your album has been created!</h1>
 <h2 class="inc250"> You can now see your playlist in your Spotify account. </h2>
-<h3> External Link: </h3>
-    <ul>
-
-        <li> <a class="inc250" href="https://open.spotify.com/playlist/{{playlist_id}}"> View Playlist <img src="img/spotify_icon.jpg"/> </a> </li>
-    </ul>
+<a class="inc250" href="https://open.spotify.com/playlist/{{playlist_id}}"> View Playlist in Spotify <img src="img\spotifyLogo.png"> </a><br>
+<a class="btn btn-primary inc250 but top-bottom-margin" href="/spotify-generator">Generate Another Playlist</a>
     <script>
         document.querySelector("form").onsubmit = function(e) {
 
@@ -72,9 +85,68 @@
             });
         }
     </script>
+
+<div class="container mt-5">
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-outline-success btn-lg float-right" data-toggle="modal" data-target="#exampleModal">
+Open Modal
+</button>
+
+<!-- Modal -->
+      
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 {% for track_id in track_ids %}
-    <iframe class="test3" style="border-radius:12px" src="https://open.spotify.com/embed/track/{{ track_id }}?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+<div class="frame-container">
+    {% set spotify_track_id = track_id %}
+    <button class="iframe-button" id ="{{spotify_track_id}}" onclick="buttonClicked(id)" >
+       Lyrics
+    </button>
+    <!-- <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#exampleModal">Open Modal</button> -->
+
+ <!--  <input type="iframe-button" class="'iframe-button" onclick="buttonClicked()" value='Lyrics'> -->
+    <iframe class="test3" style="border-radius:12px" src="https://open.spotify.com/embed/track/{{ track_id }}?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+    </iframe>
+</div>
 {% endfor %}
+
+<script>
+function buttonClicked(id) {
+        let formData = new FormData();
+        formData.append("id", id);
+            // alert(id);
+        fetch("/get-lyrics", {
+            method: "POST",
+            body: formData
+        })
+        .then(function(response) {
+          // This right here is the response we will receive before we convert
+          // it over to readable JSON
+          document.getElementById('modal');
+          console.log("Response turning to readable JSON", response);
+          return response.text();
+        })
+        .then(function(response) {
+          // Don't worry if this says "false", it just returns that when the user already exists from flasks end
+          // Once it reaches here, the async is already successful
+        //   var myModal = document.getElementById('modal');
+        //   myModal.show()
+        //   console.log("Successful async:", response);
+            // console.log("Async received", response)
+            alert(response);
+        })
+        .catch(function(error) {
+          console.log("Error in async", error);
+        });
+    };
+
+    myModal.addEventListener('shown.bs.modal', function () {
+    myInput.focus()
+    })
+</script>
+
+
+
+<br>
+<br>
 </body>
 </html>
