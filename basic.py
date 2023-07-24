@@ -107,11 +107,14 @@ def logout():
     session.pop('username', None)
     flash('You have been logged out.', 'success')
     return redirect(url_for('login'))
-
+songs = None
+playlist_name = None
 @app.route('/success', methods=['GET', 'POST'])
 @require_login
 def playlist_created():
     form = ArtistForm()
+    global songs
+    global playlist_name
     global x
     global id_name_dict
     if request.method == "POST":
@@ -133,6 +136,7 @@ def playlist_created():
         song_names = songs['song'].to_list()
         # print(song_ids)
         x = create_playlist(username, playlist_name, songs)
+        
         flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
 
         ###added
@@ -155,8 +159,16 @@ def playlist_created():
         print(id_name_dict)
         
         ###added
-        return render_template('success.html', title='Playlist Created', playlist_id=x, track_ids=track_ids, username=username)
+        return render_template('success.html', title='Playlist Created', playlist_id=x, track_ids=track_ids, username=username, songs=songs, playlist_name=playlist_name)
         ###added
+
+@app.route('/download-songs', methods=['POST'])
+@require_login
+def download_route():
+    global songs
+    global playlist_name
+    download_songs(songs, playlist_name)
+    return {"message": "Songs downloaded"}
 
 @app.route('/account')
 @require_login

@@ -9,11 +9,11 @@ from list_songs import CLIENT_ID, CLIENT_SECRET, scope
 import zipfile
 import os
 
-def download_songs(songs):
+def download_songs(songs,pl_name):
     # temporary folder for storing downloaded songs
     os.makedirs('temp_songs', exist_ok=True)
 
-    api_key = 'AIzaSyAj39sgUo0s3BtaBdY9fUXeTYgOU5y_Eyg' 
+    api_key = 'AIzaSyBvWdgHeEB0wyTHmRzKxwB8E1uAeKwSk94' 
     search_url = 'https://www.googleapis.com/youtube/v3/search'
     track_names = songs['song'].tolist()
     print(track_names)
@@ -28,6 +28,7 @@ def download_songs(songs):
 
         response = requests.get(search_url, params=search_params)
         video_data = response.json()
+        print(video_data)
         video_id = video_data['items'][0]['id']['videoId']
 
         youtube_url = f"https://www.youtube.com/watch?v={video_id}"
@@ -44,7 +45,7 @@ def download_songs(songs):
 
     # creating a zip file
     downloads_folder = os.path.join(os.path.expanduser('~'), 'Downloads')
-    zip_file_path = os.path.join(downloads_folder, 'downloaded_songs.zip')
+    zip_file_path = os.path.join(downloads_folder, f'{pl_name}.zip')
     print(f"Creating zip file at {zip_file_path}...")
 
     with zipfile.ZipFile(zip_file_path, 'w') as myzip:
@@ -110,7 +111,7 @@ from list_songs import CLIENT_ID, CLIENT_SECRET, scope
 import zipfile
 
 def download_song(name, session):
-    api_key = 'AIzaSyAj39sgUo0s3BtaBdY9fUXeTYgOU5y_Eyg'
+    api_key = 'AIzaSyDW3KTHZntRMn3g2SHymOWF-bfMMHMKVZQ'
     search_url = 'https://www.googleapis.com/youtube/v3/search'
 
     search_params = {
@@ -123,6 +124,7 @@ def download_song(name, session):
 
     response = session.get(search_url, params=search_params)
     video_data = response.json()
+    print(video_data)
     video_id = video_data['items'][0]['id']['videoId']
 
     youtube_url = f"https://www.youtube.com/watch?v={video_id}"

@@ -22,6 +22,8 @@
 <h2 class="inc250"> You can now see your playlist in your Spotify account. </h2>
 <a class="inc250" href="https://open.spotify.com/playlist/{{playlist_id}}"> View Playlist in Spotify <img src="img\spotifyLogo.png"> </a><br>
 <a class="btn btn-primary inc250 but top-bottom-margin" href="/spotify-generator">Generate Another Playlist</a>
+<button class="btn btn-primary inc250 but top-bottom-margin" id="downloadButton">Download Songs</button>
+
     <script>
         document.querySelector("form").onsubmit = function(e) {
 
@@ -115,8 +117,37 @@ function buttonClicked(id) {
     myInput.focus()
     })
 </script>
-{% endblock %}
 
+<script>
+    console.log("script started"); // Log when script started
+    const downloadButton = document.getElementById("downloadButton");
+    downloadButton.addEventListener("click", function() {
+        downloadButton.className += " btn-warning"; // Change the button color to warning (yellow) during download
+        downloadButton.innerText = 'Downloading...';
+
+        console.log("Button clicked"); // Log when button is clicked
+        fetch("/download-songs", {
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Response received: ", data.message); // Log response received from server
+            downloadButton.className = "btn btn-primary inc250 but top-bottom-margin btn-success"; // Change the button color to success (green) after download
+            downloadButton.innerText = 'Download Complete';
+        })
+        .catch((error) => {
+            console.log("Error:", error); // Log any errors
+            downloadButton.className = "btn btn-primary inc250 but top-bottom-margin btn-danger"; // Change the button color to danger (red) if there's an error
+            downloadButton.innerText = 'Download Failed';
+        });
+    });
+</script>
+
+{% endblock %}
+    
 
 <br>
 <br>
