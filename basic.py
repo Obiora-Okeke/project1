@@ -2,14 +2,16 @@ from flask import Flask, render_template, url_for, flash, redirect, request, ses
 from forms import ArtistForm, RegistrationForm, LoginForm
 from flask_behind_proxy import FlaskBehindProxy
 from list_songs import api_call, json_to_dataframe, top_songs_call
+from genius import get_lyrics
 from make_album import create_playlist
 import pandas as pd
 import functools
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-x = ''
 
+x=''
+id_name_dict = {}
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '626423b656a4f6851a5cbece30f78108'
@@ -110,9 +112,10 @@ def logout():
 def playlist_created():
     form = ArtistForm()
     global x
+    global id_name_dict
     if request.method == "POST":
         artist_name = request.form.get('artist')
-        spotify_username = request.form.get('username')
+        username = request.form.get('username')
         playlist_name = request.form.get('playlist')
         dat = api_call(artist_name)
         adf = json_to_dataframe(dat)
@@ -122,8 +125,16 @@ def playlist_created():
             ar_songs = top_songs_call(ar)
             ar_songs_df = pd.DataFrame(ar_songs)
             songs = pd.concat([songs, ar_songs_df])
-        x = create_playlist(spotify_username, playlist_name, songs)
+        # set_songs_df(songs)
+        # get_genius_info()1
+        print('songs:', songs)
+        # song_ids = songs['track_id'].to_list()
+        song_names = songs['song'].to_list()
+        # print(song_ids)
+        x = create_playlist(username, playlist_name, songs)
         flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
+
+        ###added
         username = session['username']
         user = User.query.filter_by(username=username).first()
         if user:
@@ -136,9 +147,15 @@ def playlist_created():
             db.session.commit()
         else:
             flash('User not found.', 'danger')
+        ###added
 
         track_ids = songs['track_id'].tolist()
+        id_name_dict = {track_ids[i]: song_names[i] for i in range(len(track_ids))}
+        print(id_name_dict)
+        
+        ###added
         return render_template('success.html', title='Playlist Created', playlist_id=x, track_ids=track_ids, username=username)
+        ###added
 
 @app.route('/account')
 @require_login
@@ -153,8 +170,20 @@ def account():
         playlist_names = []
     return render_template('account.html', title='Account', username=username, playlist_ids=playlist_ids, playlist_names=playlist_names)
 
+  
+
+@app.route("/get-lyrics", methods=['GET', 'POST'])
+def getLyrics():
+   if request.method == "POST":
+      song_id = request.form.get('id')
+      print(song_id)
+      song_name = id_name_dict[song_id]
+      lyrics = get_lyrics(song_name)
+      print(lyrics)
+      return lyrics
+
 if __name__ == '__main__':
     with app.app_context():
-        db.drop_all()
         db.create_all()
     app.run(debug=True, host="0.0.0.0")
+#. ~/.bashrc

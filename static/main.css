@@ -134,6 +134,28 @@ a.article-title:hover {
   height: 100vh;
 }
 
+.frame-container {
+  position: relative;
+}
+
+.iframe-button {
+  display: none;
+  position: absolute;
+  top: 15%;
+  left: 90%;
+}
+
+/* Only show the button when the parent is hovered: */
+.frame-container:hover .iframe-button {
+  display: initial;
+}
+/* 
+.frame-container {
+  position: relative;
+} */
+
+
+
 .top-margin {
   margin-top: 20px;
 }
