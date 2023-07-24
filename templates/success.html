@@ -13,24 +13,10 @@
     <title>Album Successfully Created</title>
 </head>
 <body class="left-right-margin">
-    <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
-          <div class="container">
-            <a class="navbar-brand mr-4 inc250" href="/">SPG</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarToggle">
-              <div class="navbar-nav mr-auto">
-                <a class="nav-item nav-link" href="/">Home</a>
-                <a class="nav-item nav-link" href="/about">About</a>
-              </div>
-            </div>
-          </div>
-        </nav>
-    </header>
+  {% extends 'base.html' %}
 
-    
+  {% block title %}Success{% endblock %}
+  {% block content %}
 <br>
 <h1>Your album has been created!</h1>
 <h2 class="inc250"> You can now see your playlist in your Spotify account. </h2>
@@ -129,7 +115,7 @@ function buttonClicked(id) {
     myInput.focus()
     })
 </script>
-
+{% endblock %}
 
 
 <br>
