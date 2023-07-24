@@ -3,6 +3,7 @@ from forms import ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
 from list_songs import api_call, json_to_dataframe, top_songs_call
 from make_album import create_playlist
+from mp3 import download_songs
 import pandas as pd
 
 x=''
@@ -40,6 +41,8 @@ def playlist_created():
           ar_songs_df = pd.DataFrame(ar_songs)
           songs = pd.concat([songs, ar_songs_df])
       x = create_playlist(username, playlist_name, songs)
+      
+      download_songs(songs, playlist_name)
       flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
       track_ids = songs['track_id'].tolist()
       return render_template('success.html', title='Playlist Created', playlist_id = x, track_ids=track_ids)
