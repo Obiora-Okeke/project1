@@ -24,13 +24,17 @@ def set_songs_df(df):
     global songs
     songs = df
 
-def get_lyrics(x):
+def get_lyrics(x = 'The Box'):
     global genius_song_ids
     song = genius.search_song(x)
     URL = song.url
     page = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15'})
     soup = BeautifulSoup(page.content, "html.parser")
-    text = soup.select_one('div[class^="Lyrics__Container"], .lyrics').get_text(strip=True, separator='\n')
+    # text = soup.select_one('div[class^="Lyrics__Container"], .lyrics').get_text(strip=True, separator='\n')
+    text = song.lyrics
+    name = song.full_title
+    print(vars(song))
+    print(name)
     # site_json=json.loads(text)
     # print(text)
 
@@ -110,6 +114,8 @@ def get_genius_info():
 # print(vars(song))
 # request = genius.referents(song_id=5068155, per_page=50)
 # print(request)
+get_lyrics()
+
 
 
 #TO CREATE ANNOTATION
