@@ -7,6 +7,7 @@ import urllib, urllib.request
 from bs4 import BeautifulSoup
 import requests
 import json
+import re
 
 CLIENT_ID = 'bZm1B5vrRPoI1-vRDCt3gKkFOsWDaMqWR-xjiT7iMEBQj0bVQoI38i1mOrEGYAjm'
 CLIENT_SECRET = '5ZJNhpisxNRxKKf5sk4cKEx0DfEki4S6w3HQgWsyEPg653jJosX1200FaHZy1oGlN3R1Opu6OjyKdAfuxIywPg'
@@ -31,10 +32,13 @@ def get_lyrics(x = 'The Box'):
     page = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15'})
     soup = BeautifulSoup(page.content, "html.parser")
     # text = soup.select_one('div[class^="Lyrics__Container"], .lyrics').get_text(strip=True, separator='\n')
-    text = song.lyrics
-    name = song.full_title
-    print(vars(song))
-    print(name)
+    unformatted = song.lyrics
+    name = song.title
+    print('name: ', name)
+    end = 'Embed'
+    
+    # lyrics = re.findall(s+"(.*)"+e,text)[0]
+    print(unformatted[unformatted.find(f'{name} ')+len(name):unformatted.rfind(end)-3])
     # site_json=json.loads(text)
     # print(text)
 
@@ -44,7 +48,8 @@ def get_lyrics(x = 'The Box'):
     # formatted_lyrics = lyrics.replace('\r', '').replace('[', '').replace(']', '').strip()
     # formatted_lyrics = f"""{formatted_lyrics}"""
     # print(site_json)
-    return text
+    # return lyrics
+
 
 def get_annotations(x):
     request = genius.referents(song_id=x, per_page=50)
