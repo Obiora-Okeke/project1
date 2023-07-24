@@ -38,7 +38,7 @@ def get_lyrics(x = 'The Box'):
     end = 'Embed'
     
     # lyrics = re.findall(s+"(.*)"+e,text)[0]
-    print(unformatted[unformatted.find(f'{name} ')+len(name):unformatted.rfind(end)-3])
+    lyrics = unformatted[unformatted.find(f'{name} ')+len(name):unformatted.rfind(end)-3]
     # site_json=json.loads(text)
     # print(text)
 
@@ -48,7 +48,7 @@ def get_lyrics(x = 'The Box'):
     # formatted_lyrics = lyrics.replace('\r', '').replace('[', '').replace(']', '').strip()
     # formatted_lyrics = f"""{formatted_lyrics}"""
     # print(site_json)
-    # return lyrics
+    return lyrics
 
 
 def get_annotations(x):
