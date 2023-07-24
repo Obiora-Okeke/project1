@@ -8,13 +8,9 @@ import pandas as pd
 import functools
 from flask_sqlalchemy import SQLAlchemy
 
-x = ''
 
-<<<<<<< HEAD
-=======
 x=''
 id_name_dict = {}
->>>>>>> 76e0a5d6f614c7bd49f1932abc7c1652547b8017
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '626423b656a4f6851a5cbece30f78108'
@@ -61,83 +57,13 @@ def home():
 def spotify_generator():
     return render_template('spotify_generator.html', title='Spotify Playlist Generator')
 
-<<<<<<< HEAD
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        user = User.query.filter_by(username=username).first()
-        if user:
-            flash('Username is already taken. Please choose a different one.', 'danger')
-        else:
-            new_user = User(username=username, password=password)
-            db.session.add(new_user)
-            db.session.commit()
-            flash('Registration successful. You can now log in.', 'success')
-            return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        password = form.password.data
-        user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
-            session['username'] = username
-            flash('Login successful.', 'success')
-            return redirect(url_for('home'))
-        else:
-            flash('Invalid username or password.', 'danger')
-    return render_template('login.html', title='Login', form=form)
-
-@app.route('/logout')
-def logout():
-    session.pop('username', None)
-    flash('You have been logged out.', 'success')
-    return redirect(url_for('login'))
-=======
 @app.route("/about")
 def about():
    return render_template('about.html', text="This is the about page.", title = 'About Page')
->>>>>>> 76e0a5d6f614c7bd49f1932abc7c1652547b8017
 
 @app.route('/success', methods=['GET', 'POST'])
 @require_login
 def playlist_created():
-<<<<<<< HEAD
-    form = ArtistForm()
-    global x
-    if request.method == "POST":
-        artist_name = request.form.get('artist')
-        username = session['username']
-        playlist_name = request.form.get('playlist')
-        dat = api_call(artist_name)
-        adf = json_to_dataframe(dat)
-        rel_artists = adf['name'].tolist()
-        songs = pd.DataFrame()
-        for ar in rel_artists[:5]:
-            ar_songs = top_songs_call(ar)
-            ar_songs_df = pd.DataFrame(ar_songs)
-            songs = pd.concat([songs, ar_songs_df])
-        x = create_playlist(username, playlist_name, songs)
-        flash(f"Playlist '{playlist_name}' created successfully with {len(songs)} songs.", 'success')
-        track_ids = songs['track_id'].tolist()
-        return render_template('success.html', title='Playlist Created', playlist_id=x, track_ids=track_ids)
-
-@app.route('/account')
-@require_login
-def account():
-    username = session['username']
-    return render_template('account.html', title='Account', username=username)
-
-if __name__ == '__main__':
-    create_tables()  # Create the database tables
-    app.run(debug=True, host="0.0.0.0")
-=======
   form = ArtistForm()
   global x
   global id_name_dict
@@ -181,4 +107,3 @@ if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")
 
 #. ~/.bashrc
->>>>>>> 76e0a5d6f614c7bd49f1932abc7c1652547b8017
