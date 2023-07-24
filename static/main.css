@@ -20,6 +20,17 @@ h1{
   color: #1DB954;
   font-size:200%;
 }
+
+.pnlabel {
+  color: #1DB954;
+  font-size:100%;
+}
+.rmspace {
+  margin-bottom: 0px; /* Adjust this value as needed */
+}
+.addspace {
+  margin-bottom: 25px; /* Adjust this value as needed */
+}
 .but {
   background-color: #1DB954;
   color:#ffffff;
@@ -122,6 +133,28 @@ a.article-title:hover {
   align-items: flex-start;
   height: 100vh;
 }
+
+.frame-container {
+  position: relative;
+}
+
+.iframe-button {
+  display: none;
+  position: absolute;
+  top: 15%;
+  left: 90%;
+}
+
+/* Only show the button when the parent is hovered: */
+.frame-container:hover .iframe-button {
+  display: initial;
+}
+/* 
+.frame-container {
+  position: relative;
+} */
+
+
 
 .top-margin {
   margin-top: 20px;

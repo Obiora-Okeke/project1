@@ -10,6 +10,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 import spotipy.util as util
 
+global_songs = []
+
 def get_artist_id(artist_name):
     search_response = requests.get(BASE_URL + 'search',
                                    headers=headers,
@@ -59,13 +61,17 @@ def top_songs_call(art_name):
 
 
 def json_to_dataframe(data):
+    global global_songs
     dataframe_name = pd.DataFrame.from_dict(data['artists'])
     if 'followers' in dataframe_name:
         fol = dataframe_name['followers'].map(lambda x: x.get('total', 'N/A'))
         dataframe_name['followers'] = fol
-    return dataframe_name[['name', 'uri', 'popularity',
-                           'followers']].sort_values('followers',
+    to_return = dataframe_name[['name', 'uri', 'popularity',
+                           'followers', 'id']].sort_values('followers',
                                                      ascending=False)
+    print(to_return)
+    global_songs = to_return
+    return to_return 
 
 
 def songs_dataframe(s):
@@ -91,4 +97,13 @@ auth_response_data = auth_response.json()
 access_token = auth_response_data['access_token']
 headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 BASE_URL = 'https://api.spotify.com/v1/'
-engine = db.create_engine('sqlite:///actual_data_frame.db')
+# engine = db.create_engine('sqlite:///actual_data_frame.db')
+# # dataframe_to_database(songs)
+# with engine.connect() as connection:
+#     connect = connection.execute(db.text("SELECT * FROM table_name;"))
+#     query_result = connect.fetchall()
+
+    # print(tabulate(pd.DataFrame(query_result),
+    #                ['artist', 'song', 'uri'],
+    #                tablefmt="grid",
+    #                maxcolwidths=[None, 15, 53]))
