@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from forms import ArtistForm
 from flask_behind_proxy import FlaskBehindProxy
 from list_songs import api_call, json_to_dataframe, top_songs_call
-from genius import get_lyrics
+from genius import get_lyrics, get_annotations, getGeniusInfo
 from make_album import create_playlist
 import pandas as pd
 from flask_modals import Modal
@@ -10,6 +10,8 @@ from flask_modals import render_template_modal
 # from jinja2 import Markup
 
 x=''
+name = ''
+
 id_name_dict = {}
 app = Flask(__name__)
 modal = Modal(app)
@@ -62,13 +64,38 @@ def playlist_created():
 @app.route("/get-lyrics", methods=['GET', 'POST'])
 def getLyrics():
    if request.method == "POST":
+      global name
+      html_string = f"<div id='rg_embed_link_{song_id}' class='rg_embed_link' data-song-id='{song_id}'>Read <a href='https://genius.com/Lil-tecca-ransom-lyrics'>“Ransom” by Lil Tecca</a> on Genius</div> <script crossorigin src='//genius.com/songs/4570978/embed.js'></script>"
       song_id = request.form.get('id')
       print(song_id)
       song_name = id_name_dict[song_id]
-      name, lyrics = get_lyrics(song_name)
+      genius_name, lyrics = get_lyrics(song_name)
+      name = genius_name
       print(lyrics)
-      to_return = [name, lyrics]
+      to_return = [genius_name, lyrics]
       return to_return
+
+# @app.route("/get-lyrics", methods=['GET', 'POST'])
+# def getLyrics():
+#    if request.method == "POST":
+#     song_id = request.form.get('id')
+#     song_name = id_name_dict[song_id]
+#     genius_name, genius_vars = getGeniusInfo(song_name)
+#     song_id = genius_vars[0]
+#     url = genius_vars[1]
+#     title = genius_vars[2]
+#     html_string = f"<div id='rg_embed_link_{song_id}' class='rg_embed_link' data-song-id='{song_id}'>Read <a href='{url}'>{title}</a> on Genius</div> <script crossorigin src='//genius.com/songs/{song_id}/embed.js'></script>"
+#     # html_string = f"<div id='rg_embed_link_{song_id}' class='rg_embed_link' data-song-id='{song_id}'>Read <a href={url}>{title}</a> on Genius</div> <script crossorigin src='//genius.com/songs/{song_id}/embed.js'></script>"
+#     print(html_string)
+#     to_return = [genius_name, html_string]
+#     return to_return
+
+@app.route("/get-annotations", methods=['GET', 'POST'])
+def getAnnotations():
+   if request.method=='POST':
+      annotations = get_annotations(name)
+      print(annotations)
+      return annotations
 
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")

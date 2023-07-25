@@ -18,7 +18,7 @@ headers = {'Authorization': 'Bearer {token}'.format(token=access_token)}
 
 genius = Genius(access_token)
 songs = pd.DataFrame()
-genius_song_ids = []
+id_name_dict= {}
 
 
 def set_songs_df(df):
@@ -26,11 +26,12 @@ def set_songs_df(df):
     songs = df
 
 def get_lyrics(x):
-    global genius_song_ids
+    global id_name_dict
     if ('(' in x):
         x = x.replace(x[x.rfind('(') - 1:len(x)], '')
     print('x: ', x)
     song = genius.search_song(x)
+    print(vars(song))
     # URL = song.url
     # page = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15'})
     # soup = BeautifulSoup(page.content, "html.parser")
@@ -48,12 +49,26 @@ def get_lyrics(x):
     # print('unformatted: ', unformatted)
     lyrics = unformatted[unformatted.find(f'{name}') + len(name) + 7:unformatted.rfind(end)]
     print(lyrics)
-    genius_song_ids.append(song.id)
+    id_name_dict[name] = song.id
     return name, lyrics
+
+def getGeniusInfo(x):
+    to_return = []
+    if ('(' in x):
+        x = x.replace(x[x.rfind('(') - 1:len(x)], '')
+    print('x: ', x)
+    song = genius.search_song(x)
+    name = song.title
+    to_return = [song.id, song.url, song.full_title]
+    return name, to_return
+
+
+
 
 
 def get_annotations(x):
-    request = genius.referents(song_id=x, per_page=50)
+    genius_id = id_name_dict[x]
+    request = genius.referents(song_id=genius_id, per_page=50)
     # print('requests:', request)
     # print(request)
     annotation_ids = [y['id'] for x in request['referents'] for y in x['annotations']]
@@ -108,19 +123,21 @@ def downvote_annotation(id):
 def upvote_annotation(id):
     genius.upvote_annotation(annotation_id = id)
 
-def get_genius_info():
-    songs['lyrics'] = songs['song'].apply(lambda x: [get_lyrics(x)])
-    songs['genius_id'] = genius_song_ids
-    songs['annotations'] = songs['genius_id'].apply(lambda x: [get_annotations(x)])
+# def get_genius_info():
+#     songs['lyrics'] = songs['song'].apply(lambda x: [get_lyrics(x)])
+#     songs['genius_id'] = genius_song_ids
+#     songs['annotations'] = songs['genius_id'].apply(lambda x: [get_annotations(x)])
 
 # create()
 
+# get_lyrics('The Box')
+# get_annotations('The Box')
 # song = genius.search_song('Ransom')
 # get_annotations(song.id)
 # print(vars(song))
 # request = genius.referents(song_id=5068155, per_page=50)
 # print(request)
-# get_lyrics()
+
 
 
 
