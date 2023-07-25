@@ -46,10 +46,10 @@ def get_lyrics(x):
     unformatted = unformatted.replace(unformatted[unformatted.rfind(' ') + 1:len(unformatted)], last_word)
     # unformatted[unformatted.rfind(' '):] = last_word
     # print('unformatted: ', unformatted)
-    lyrics = unformatted[unformatted.find(f'{name}'):unformatted.rfind(end)]
+    lyrics = unformatted[unformatted.find(f'{name}') + len(name) + 7:unformatted.rfind(end)]
     print(lyrics)
     genius_song_ids.append(song.id)
-    return lyrics
+    return name, lyrics
 
 
 def get_annotations(x):

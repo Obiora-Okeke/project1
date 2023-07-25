@@ -65,9 +65,10 @@ def getLyrics():
       song_id = request.form.get('id')
       print(song_id)
       song_name = id_name_dict[song_id]
-      lyrics = get_lyrics(song_name)
+      name, lyrics = get_lyrics(song_name)
       print(lyrics)
-      return lyrics
+      to_return = [name, lyrics]
+      return to_return
 
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")
