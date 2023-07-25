@@ -130,7 +130,7 @@ a.article-title:hover {
 .iframe-button {
   display: none;
   position: absolute;
-  top: 15%;
+  top: 8%;
   left: 90%;
 }
 
@@ -142,9 +142,6 @@ a.article-title:hover {
 .frame-container {
   position: relative;
 } */
-
-
-
 .top-margin {
   margin-top: 20px;
 }

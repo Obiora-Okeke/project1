@@ -69,7 +69,7 @@ def json_to_dataframe(data):
     to_return = dataframe_name[['name', 'uri', 'popularity',
                            'followers', 'id']].sort_values('followers',
                                                      ascending=False)
-    print(to_return)
+    # print(to_return)
     global_songs = to_return
     return to_return 
 

@@ -5,10 +5,14 @@ from list_songs import api_call, json_to_dataframe, top_songs_call
 from genius import get_lyrics
 from make_album import create_playlist
 import pandas as pd
+from flask_modals import Modal
+from flask_modals import render_template_modal
+# from jinja2 import Markup
 
 x=''
 id_name_dict = {}
 app = Flask(__name__)
+modal = Modal(app)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '626423b656a4f6851a5cbece30f78108'
 
@@ -64,7 +68,6 @@ def getLyrics():
       lyrics = get_lyrics(song_name)
       print(lyrics)
       return lyrics
-   
 
 if __name__ == '__main__':
   app.run(debug=True, host="0.0.0.0")
