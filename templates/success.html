@@ -67,7 +67,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLabel"> </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <pre>
@@ -151,13 +151,13 @@ $(document).on("click", ".iframe-button", function () {
           // This right here is the response we will receive before we convert
           // it over to readable JSON
         console.log("Response turning to readable JSON", response);
-        return response.text();
+        return response.json();
     })
     .then(function(response) {
         // $(".modal-body #lyrics").val( response );
-
         var modal = document.getElementById('myModal')
-        modal.querySelector(".modal-body").innerHTML = response;
+        modal.querySelector(".modal-body").innerHTML = response[1];
+        modal.querySelector(".modal-title").innerHTML = response[0] + " Lyrics";
         // $(".modal-body").val( response );
     })
     .catch(function(error) {
