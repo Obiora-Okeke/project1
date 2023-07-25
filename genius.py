@@ -25,12 +25,15 @@ def set_songs_df(df):
     global songs
     songs = df
 
-def get_lyrics(x = 'The Box'):
+def get_lyrics(x):
     global genius_song_ids
+    if ('(' in x):
+        x = x.replace(x[x.rfind('(') - 1:len(x)], '')
+    print('x: ', x)
     song = genius.search_song(x)
-    URL = song.url
-    page = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15'})
-    soup = BeautifulSoup(page.content, "html.parser")
+    # URL = song.url
+    # page = requests.get(URL, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_4_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15'})
+    # soup = BeautifulSoup(page.content, "html.parser")
     # text = soup.select_one('div[class^="Lyrics__Container"], .lyrics').get_text(strip=True, separator='\n')
     unformatted = song.lyrics
     name = song.title
@@ -38,16 +41,14 @@ def get_lyrics(x = 'The Box'):
     end = 'Embed'
     
     # lyrics = re.findall(s+"(.*)"+e,text)[0]
-    lyrics = unformatted[unformatted.find(f'{name} ')+len(name):unformatted.rfind(end)-3]
-    # site_json=json.loads(text)
-    # print(text)
-
-    # song = genius.search_song(x)
+    last_word = re.sub(r'\d+', '', unformatted[unformatted.rfind(' ') + 1: len(unformatted)])
+    # print('last word: ', last_word)
+    unformatted = unformatted.replace(unformatted[unformatted.rfind(' ') + 1:len(unformatted)], last_word)
+    # unformatted[unformatted.rfind(' '):] = last_word
+    # print('unformatted: ', unformatted)
+    lyrics = unformatted[unformatted.find(f'{name}'):unformatted.rfind(end)]
+    print(lyrics)
     genius_song_ids.append(song.id)
-    # lyrics = song.lyrics
-    # formatted_lyrics = lyrics.replace('\r', '').replace('[', '').replace(']', '').strip()
-    # formatted_lyrics = f"""{formatted_lyrics}"""
-    # print(site_json)
     return lyrics
 
 
@@ -119,7 +120,7 @@ def get_genius_info():
 # print(vars(song))
 # request = genius.referents(song_id=5068155, per_page=50)
 # print(request)
-get_lyrics()
+# get_lyrics()
 
 
 
